@@ -1,0 +1,29 @@
+= GM/T 0015-2012 SM2 Cryptography Algorithm Application Specification
+
+This is a re-creation of the GM/T 0015-2012 document using https://github.com/riboseinc/asciidoctor-gb/[asciidoctor-gb] using the https://github.com/riboseinc/gbdoc[GbDoc] model.
+
+The output is in `.doc` and `.html` formats.
+
+== Usage
+
+=== Prerequisites
+
+[source,sh]
+----
+bundle
+----
+
+=== Building The Document
+
+==== DOC, HTML
+
+[source,sh]
+----
+make clean all
+----
+
+==== PDF
+
+TBD.
+
+NOTE: building in PDF doesn't properly render math blocks yet.
