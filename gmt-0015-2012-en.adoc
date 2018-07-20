@@ -1,5 +1,5 @@
 = GM/T 0015-2012 SM2 Cryptographic Algorithm Application Specification
-:docnumber: 0009
+:docnumber: 0015
 :edition: 1
 :revdate: 2012-11-22
 :copyright-year: 2012
@@ -18,557 +18,2488 @@
 :mandate: recommended
 :library-ics: 35.040
 :library-ccs: L80
-:proposer: 国家密码管理局
-:authority: 国家密码管理局
+:proposer: State Cryptography Administration
+:authority: State Cryptography Administration
 :stem:
 
 :sectnums!:
 
 .Foreword
 
-This standard is authored in accordance with GB/T 1.1-2009.
+This Standard is drafted in accordance with the rules of GB/T 1.1—2009.
 
-Please note that some of this document involve patents. The publishers of this
-document do not bear responsibility of identifying these patents.
+Please be informed that part of this Standard may involve patterns. The issuer of this Standard shall not bear the responsibility for identifying those patterns.
 
-This standard is proposed and managed by the {technical-committee}.
+Annex A, Annex B and Annex C are normative annexes; Annex D is informative annex.
 
-This standard was drafted by these organizations:
+This Standard is proposed by and shall be under the jurisdiction of State Cryptography Administration.
 
-* Beijing Haitai Fangyuan Technology Co., Ltd.
-* Westone Information Industry Inc.
-* Wuxi Jiangnan Information Technology Co., Ltd., Security Engineering Technology Center
-* Xingtang Telecommunications Technology Co., Ltd
-* Shanghai Koal Software Co.
-* Shandong Dean Information Technology Co., Ltd
+Drafting Committee: Shanghai Koal Software Co., Ltd., Beijing Certificate Authority Co., Ltd., Beijing Haitai Fangyuan Technology Co., Ltd., Wuxi Jiangnan Information Security Engineering Technology Center, Shanghai Electronic Certificate Authority Center Co., Ltd., Changchun Jida Zhengyuan Information Technology Co., Ltd., Westone Information Technology Inc., Xingtang Communications Technology Co., Ltd., Beijing Huada Zhibao Electronic System Co., Ltd., Shandong De’an Technology Co., Ltd., National Information Security Engineering Center, National Cryptography Administration Commercial Cryptography Testing Center.
 
-The main drafters of this standard include:
+Drafters: Ping Liu, Wuzheng Tan, Shusheng Li, Zengshou Liu, Qiang Xu, Cheng Liu, Lili Zhao, Yuanzheng Li, Nina Wang, Yue Chen, Fanyu Kong, Feng Yuan, Zhiwei Li.
 
-* Liu Ping
-* Jiang Hongyu
-* Liu Zengshou
-* Li Yuanzheng
-* Xu Qiang
-* Tan Wuzheng
-* Kongfan Yu
-* Wang Nina
+The algorithms involved in this Standard shall be used in accordance with the requirements of the state cryptography administration department.
 
 
-== Introduction
 
-The SM2 Elliptic Curve Cryptographic Algorithm (SM2) is a set of algorithms
-approved by the State Cryptographic Administration. It includes the SM2-1
-Elliptic Curve Digital Signature Algorithm, the SM2-2 Elliptic Curve Key
-Exchange Protocol, and the SM2-3 Elliptic Curve Public-Key Encryption
-algorithm.
-
-The purpose of this standard is to ensure correctness of the usage of the SM2
-cryptographic algorithms, through the standardization of a uniform data format
-and method of use.
-
-The SM3 algorithm specified in this standard refers to the SM3 Cryptographic
-Hash Algorithm approved by the State Cryptographic Administration.
-
-This standard is intended to only provide instructions on the application of
-the SM2 cryptographic algorithms, and does not provide details on their actual
-calculations.
 
 :sectnums:
-
+[[scope]]
 == Scope
 
-This standard defines the usage methods of the SM2 cryptographic algorithm, as
-well as data formats for secret key, encryption and signature data.
+This standard specifies the basic structure and data content of a digital certificate and a certificate revocation list.
 
-This standard is applicable to the usage of the SM2 cryptographic algorithm,
-and to the development and testing of devices and systems that support the
-SM2 cryptographic algorithm.
-
+This standard is applicable to the research and development of a digital certificate authentication system, the operation of a digital certificate authority, and the application security based on a digital certificate.
 
 [bibliography]
-== Normative References
+== Normative references
 
-The following documents are necessary for the application of this document. For
-referenced documents that are dated, only the dated document applies to this
-document. For referenced documents that are undated, the latest version
-(including all errata) applies to this document.
+下列文件对于本文件的应用是必不可少的。凡是注日期的引用文件，仅注日期的版本适用于本文件，凡是不注日期的引用文件，其最新版本（包括所有的修改单）适用于本文件。
 
-* [[[GMT0003,GM/T 0003 (all parts)]]] SM2 Elliptic Curve Cryptography Public Key Algorithm
-* [[[GMT0004,GM/T 0004]]] SM3 Cryptographic Hash Algorithm
-
-
-== Terms And Definitions
-
-=== [en]#algorithm identifier# [zh]#算法标识#
-used to identify the algorithm that generated a digital message
-
-=== [en]#SM2 algorithm# [zh]#SM2密码算法#
-an elliptic curve cryptographic algorithm, with a 256-bit long secret key.
-
-=== [en]#SM3 algorithm# [zh]#SM3算法#
-a hash algorithm with an output length of 256 bits.
+* [[[GBT162648,GB/T 16264.8]]]   _Information Technology	Open System Interconnection Directory Section 8; Public Key and Attribute Certificate Frameworks_
+* [[[GMT0006,GM/T 0006]]]  _Cryptographic Application Identifier Criterion Specification_
+* [[[GMT0009,GM/T 0009]]]  _SM2 Cryptography Algorithm Application Specification _
+* [[[GMT0010,GM/T 0010]]]  _SM2 Cryptography Message Syntax Specification _
+* [[[PKCS7,PKCS #7]]]  _Cryptographic Message Syntax Standard_
+* [[[RFC5280,RFC 5280]]] _Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile_
 
 
-== Symbols And Abbreviations
+[[terms]]
+== Terms and definitions
 
-The following abbreviations are applicable to this document:
+=== [zh]#数字证书# [en]#digital certificate#
 
-EC::
-  Electronic Code Book mode
+credible digital file digitally signed by an authoritative, credible, and impartial state-approved third-party certificate authority (CA).
 
-ECC::
-  Elliptic Curve Cryptography
+=== [zh]#证书撤销列表# [en]#certificate revocation list#
+[alt]#CRL#
 
-ID::
-  User identification
+list of revoked certificates issued by CA.
 
+=== [zh]#CA 证书# [en]#CA certificate#
 
-== SM2 Key Pairs
+certificate issued to a digital certificate authority.
 
-=== SM2 Private Key
+=== [zh]#终端实体证书# [en]#entity certificate#
 
-The SM2 Private Key is a whole number larger than 1 but less than (n-1) (n is
-the number of rounds of the SM2 algorithm, refer to <<GMT0003>> for its
-value).  It is abbreviated as `k`, with a length of 256 bits.
-
-=== SM2 Public Key
-
-The SM2 Public Key is a point on the SM2 Curve, represented by its x- and
-y-coordinates as `(x, y)`, abbreviated as `Q`, with each coordinate of length
-256 bits.
+also known as User Certificate, is a personal certificate, an authority certificate, a device certificate, etc. signed and issued by a digital certificate authority
 
 
-== Data Conversion
+== Abbreviations
 
-In SM2 calculations these 4 mechanisms are used to convert between Octet
-Strings and Bit Strings.
+The following abbreviations apply to this document.
+
+CA::  Certificate Authority
+CRL:: Certificate Renovation List
+DIT:: Directory Information Tree
+OID:: Object Identifier
+PKI:: Public Key Infrastructure
 
 
-=== Bit String to Octet String Conversion
+== 数字证书与CRL
 
-If the bit string length is not a multiple of 8, add `0` to its left to ensure
-the length is divisible by 8. Then create an octet string as below.
+=== 概述
 
-INPUT: Bit String stem:[B] of length stem:[b l e n]
+Digital Certificate has the following characteristics:
 
-OUTPUT: Octet String stem:[M] of length stem:[m l e n], stem:[m l e n] is the whole
-number portion of stem:[(b l e n + 7)/8].
+* Any user capable of obtaining and using the public key of a certificate authority can recover the public key authenticated by the certificate authority.
+* No other authorities are able to change a certificate, except for the certificate authority that certifies the certificate. Certificates are unforgeable.
 
-STEPS: Converting bit string stem:[B = B_0 B_1 ... B_{b l e n - 1}] to octet
-string stem:[M = M_0 M_1 ... M_{m l e n - 1}], stem:[0 <= i <= m l e n - 1].
+Since certificates are unforgeable, they can be published by being placed in a directory, without the need of being specially protected in the future.
+
+NOTE: Despite the use of a unique name in DIT for the explicit definition of CA, CA and DIT have no connections.
+
+Certificate authorities generate user certificates by signing information sets. An information set includes a distinguishable user name, a public key, and an optional unique identifier containing additional user information. The exact format of the unique identifier content is not specified in this chapter but is left to CA to define. Unique identifiers can be other forms such as object identifiers, certificates, dates, or certificates that describe the validity of distinguishable user names. To be specific, if a user certificate has a distinguishable name of A and a unique identifier of UA, and is generated by a certificate authority with the name of CA and the unique identifier of UCA, the user certificate has the following form:
 
 [stem]
-++++
-M_i = B_{b l e n-8-8(m l e n-1-i)} B_{b l e n-7-8(m l e n-1-i)} ... B_{b l e n-1-8(m l e n-1-i)}
-++++
+----
+CA<<A>> = CA{V，SN，AI，CA，UCA，A，UA，Ap，TA}
+----
 
-For stem:[M_0], the leftmost stem:[8 - b l e n % 8] positions should be set to 0, the right set to
-stem:[B_0 B_1 … B_(8 - 8(m l e n) + b l e n - 1)].
+Where V indicates certificate version; SN indicates certificate serial number; AI indicates the algorithm identifier used to sign the certificate; UCA indicates CA’s optional unique identifier; UA indicates User A’s optional unique identifier; Ap indicates User A’s public key; TA indicates certificate validity consisting of two dates, the time period between which is the validity of the certificate. Certificate validity is a time interval, during which CA must ensure to maintain the certificate information status, that is to release revocation information data. Since TA is assumed to change within a period cycle of no less than 24 hours, Coordinated Universal Time is required as the system reference time. The signature on the certificate can be used to verify the validity of the certificate by any user who knows the CA public key CAp.
 
-OUTPUT stem:[M].
-
-
-=== Octet String to Bit String Conversion
-
-Octet String to Bit String Conversion as follows:
-
-INPUT: Octet String stem:[M] of length stem:[m l e n]
-
-OUTPUT: Octet String stem:[B] of length stem:[b l e n = (8 times m l e n)]
-
-STEPS: Converting octet string stem:[M = M_0 M_1 … M_(m l e n-1)] to bit string stem:[B = B_0 B_1 … B_(b l e n-1)], stem:[0 <= i <= m l e n-1].
-
-[stem]
-++++
-B_(8i) B_(8i+1) … B_(8i+7) = M_i
-++++
-
-OUTPUT stem:[B].
-
-=== Integer to Octet String Conversion
-
-Converting an integer into an octet string, the basic method is to first
-represent the integer in binary, and the output the bit string as an octet
-string. This is the conversion flow.
-
-INPUT: A non-negative stem:[x]; expected octet string length stem:[m l e n].
-Where stem:[2^(8 (m l e n)) > x]
-
-OUTPUT: Octet string stem:[M] of length stem:[m l e n]
-
-STEPS: Convert a number stem:[x] based on stem:[2^8 = 256],
-stem:[x =
-x_{m l e n-1}2^(8(m l e n-1)) +
-x_{m l e n-2}2^(8(m l e n-2)) +
-... x_{1}2^8 + x_0] into stem:[M = M_{0}M_{1} … M_{m l e n-1}]
-
-Given stem:[0 <= i <= m l e n–1], set:
-
-[stem]
-++++
-M_{i} = x_{m l e n-1-i}
-++++
-
-OUTPUT: stem:[M]
+CRL is a list file of revoked certificates. This list can be applied on an application system to determine the validity of user certificates. CRL complies with the certificate revocation list format of the X.509V2 standard.
 
 
-=== Octet String to Whole Number Conversion
 
-It is simple to convert an Octet String into a Base 256 whole number. Conversion
-method below.
+=== Digital Certificate Format
 
-INPUT: Octet String stem:[M]
+=== General
 
-OUTPUT: Whole number stem:[x]
+This Standard uses distinguished encoding rules (DER) of GB/T 16262 series of standards to encode the information in the following certificate, forming a specific certificate data structure. ASN.l DER encoding is an encoding system of each element’s tag, length and value.
 
-STEPS: Convert stem:[M = M_0 M_1 … M_{m l e n-1}] into whole number stem:[x].
+=== Data Structure of Basic Certificate Domain
 
-stem:[M_i] is like a whole number within stem:[[0~255]]
+The basic data structure of the digital certificate is as follows:
 
-[stem]
-++++
-x = sum_{i=0}^{m l e n-1} 2^{8(m l e n-1-i)} M_i
-++++
+[source,asn1]
+----
+Certificate ::= SEQUENCE {
+  tbsCertificate      TBSCertificate,
+  signatureAlgorithm  AlgorithmIdentifier,
+  signatureValue      BIT STRING }
+----
 
-Output stem:[x].
+// TODOB: DEFAUT is a TYPO in the original standard!
+
+[source,asn1]
+----
+TBSCertificate ::= SEQUENCE {
+  version            [0] EXPLICIT Version DEFAUT v1,
+  serialNumber          CertificateSerialNumber,
+  signature             AlgorithmIdentifier,
+  issuer                Name,
+  validity              Validity,
+  subject               Name,
+  subjectPublicKeyInfo  SubjectPublicKeyInfo,
+  issuerUniqueID    [1] IMPLICIT UniqueIdentifier OPTIONAL,
+                                --If present, version must be v2 or v3
+
+  subjectUniqueID   [2] IMPLICIT UniqueIdentifier OPTIONAL,
+                                --If present, version must be v2 or v3
+
+  extensions        [3] EXPLICIT Extensions OPTIONAL 扩展项
+                                --If present, version must be v3
+}
+
+Version ::= INTEGER {  v1(0)  ,y2(1) ,v3(2)  }
+
+CertificateSerialNumber ::= INTEGER
+
+Validity ::= SEQUENCE {
+  notBefore      Time,
+  notAfter      Time }
+
+Time ::= CHOICE {
+  utcTime        UTCTime,
+  generalTime    GeneralizedTime }
+
+UniqueIdentifier ::= BIT STRING SubjectPublicKeyInfo ::= SEQUENCE {
+  algorithm          AlgorithmIdentifier,
+  subjectPublicKey  BIT STRING }
+
+Extensions ::= SEQUENCE SIZE (1..MAX) OF Extension
+
+Extension ::= SEQUENCE {
+  extnID        OBJECT IDENTIFIER,
+  critical      BOOLEAN DEFAULT FALSE,
+  extnValue     OCTET STRING }
+----
 
 
-== Data Format
+The data structure of the above certificate is composed of three domains: tbsCertificate，signatureAlgorithm, and signatureValue. The meanings of the domains are as follows:
 
-=== Secret Key Data Format
+* tbsCertificate domain contains subject name, issuer name, subject’s public key, certificate validity and other related information.
 
-SM2 secret key data format as described in ASN.1 is:
+* signatureAlgorithm domain contains the cryptographic identifier used by a certificate authority to issue this certificate. An algorithm identifier’s ASN.1 structure is as follows:
++
+[source]
+----
+AlgorithmIdentifier ::= SEQUENCE {
+  algorithm     OBJECT IDENTIFIER,
+  parameters    ANY DEFINED BY algorithm OPTIONAL }
+----
++
+Algorithm identifier is used to identify a cryptographic algorithm, in which OBJECT IDENTIFIER identifies the specific algorithm. The content of optional parameters completely relies on the algorithm identified. The algorithm identifier of this domain must be the same as the signature algorithm item identified by the signature in tbsCertificate. If the signature algorithm is SM2, no parameters are involved.
+
+* signatureValue domain contains the result of tbsCertificate being digitally signed. ASN.1 DER encoded tbsCertificate is used as the input of a digital signature, while the result of the signature is encoded as BIT STRING type according to ASN.1 and saved in the certificate signature range.
++
+If the signature algorithm is SM2, please see GM/T 0009 for SM2 cryptographic algorithm signature data format.
+
+=== TBSCertificate and its data structure
+
+TBSCertificate contains the first ten information items of a certificate structure, including subject name, issuer name, subject’s public key, validity, version number and serial number; some TBSCertificates may also contain optional unique identifiers and extensions. The syntax and semantics of the above items are defined in the following paragraphs of this section.
+
+===== 版本 Version
+
+This item describes the version number of an encoded certificate.
+
+===== 序列号 serial number
+
+本项是CA分配给每个证书的一个正整数，一个CA签发的每张证书的序列号必须是唯一的（这 样，通过颁发者的名字和序列号就可以唯一地确定一张证书），CA必须保证序列号是非负整数。序列 号可以是长整数，证书用户必须能够处理长达20个8位字节的序列号值。CA必须确保不使用大于 20个8位字节的序列号。
+
+===== 签名算法 signature
+
+本项包含CA签发该证书所使用的密码算法的标识符，这个算法标识符必须与证书中signatureAlgorithm项的算法标识符相同。可选参数的内容完全依赖所标识的具体算法，可以支持用户定义的签 名算法。
+
+===== 颁发者 Issuer
+
+本项标识了证书签名和证书颁发的实体。它必须包含一个非空的甄别名称（DN-distinguished name) 。该项被定义为Name类型，其ASN.1的结构如下：
 
 [source]
 ----
-SM2PrivateKey ::= INTEGER
+Name          ::= CHOICE { RDNSequence }
+RDNSequence   ::= SEQUENCE OF RelativeDistinguishedName
+RelativeDistinguishedName   ::= SET OF AttributeTypeAndValue
+AttributeTypeAndValue       ::= SEQUENCE {
+  type    AttributeType,
+  value   AttributeValue }
+AttributeType ::= OBJECT IDENTIFIER
+AttributeValue ::= ANY DEFINED BY AttributeType
+DirectoryString ::= CHOICE {
+  teletexString        (SIZE (1..MAX)),
+  printableString      PrintableString (SIZE (1..MAX)),
+  universalString      (SIZE (1..MAX)),
+  utf8String          UTF8String (SIZE (1..MAX)),
+  bmpString           BMPString (SIZE (1..MAX)) }
 ----
 
-SM2 public key data format as described in ASN.1 is:
+Name描述了由一些属性组成的层次结构的名称，如国家名、相应的值，如 "`C=CN`" 。其中AttributeValue 部 分的类 型是由 AttributeType 确定的，通常它是一个 DirectoryString 类型。
+DirectoryString 类型被定义为 PrintableString, TeletexString，BMPString，UTF8String 和   UniversalString类型之一。UTF8String编码是首选的编码。
+
+===== 有效期 validity
+
+本项是一个时间段，在这个时间段内，CA担保它将维护关于证书状态的信息。该项被表示成一个 具有两个时间值的SEQUENCE类型数据:证书有效期的起始时间（notBefore)和证书有效期的终止时 间（not After)。NotBefore 和 Not After 这两个时间都可以作为 UTCTime 类型或者 GeneralizedTime 类型进行编码。
+
+====== 编码类型要求
+
+遵循本标准的CA在2049年之前(包括2049年)必须将该时间编码为UTCTime类型，在2050年之后，编码为GeneralizedTime类型。
+
+====== 世界时间 UTCTime
+
+本项是为国际应用设立的一个标准ASN.1类型，在这里只有本地时间是不够的。UTCTime通过 两个低位数确定年，时间精确到1min或1s。UTCTime包含Z(用于Zulu，或格林威治标准时间）或时间差。
+
+在本项中，UTCTime值必须用格林威治标准时间（Zulu)表示，并且必须包含秒，即使秒的数值为 零（即时间格式为YYMMDDHHMMSSZ)。系统对年字段(YY)必须如下解释：
+当YY大于或等于50年，应解释为19YY；当YY不到50年，应解释为20YY。
+
+====== 通用时间类型 GeneralizedTime
+
+本项是一个标准ASN.1类型，表示时间的可变精确度。GeneralizedTime字段能包含一个本地和 格林威治标准时间之间的时间差。
+
+本项中，GeneralizedTime值必须用格林威治标准时间表示，且必须包含秒，即使秒的数值为零（BP 时间格式为 YYYYMMDDHHMMSSZ)。GeneralizedTime 值绝不能包含小数秒（fractional seconds)。
+
+===== 主体 subject
+
+本项描述了与主体公钥项中的公钥相对应的实体。主体名称可以出现在主体项和/或主体替换名 称扩展项中（subjectAltName)。 如果主体是一个CA，那么主体项必须是一个非空的与颁发者项的内 容相匹配的甄别名称 (distinguished name)。 如果主体的命名信息只出现在主体替换名称扩展项中（例如密钥只与一个Email地址或者URL绑定），那么主体名称必须是一个空序列，且主体替换名称扩展 项必须被标识成关键的。
+
+当主体项非空时，这个项必须包含一个甄别名称（DN),—个CA认证的每个主体实体的甄别名称 必须是唯一的。一个CA可以为同一个主体实体以相同的甄别名称签发多个证书。
+
+主体名称扩展项被定义成ISO/IEC 9594-2:2001的名字类型。
+
+[[subject-public-key-info]]
+===== 主体公钥信息 Subject Public Key Info
+
+本项用来标识公钥和相应的公钥算法。公钥算法使用算法标识符AlgorithmIdentifier结构来
+表示。
+
+当公钥算法为RSA时，AlgorithmIdentifier结构定义参见PKCS# 7;当公钥算法为SM2时,AlgorithmIdentifier 结构定义见 <<GMT0010>>。
+
+===== 颁发者唯一标识符 IssuerUniqueID
+
+本项主要用来处理主体或者颁发者名称的重用问题。本标准建议不同的实体名称不要重用，Internet网的证书不要使用唯一标识符。遵循本标准的证书签发机构不应生成带有颁发者唯一标识符 的证书，但是在应用过程中应该能够解析这个项并进行对比。
+
+===== 主体唯一标识符 SubjectUniqueID
+
+本项主要用来处理主体名称的重用问题，本标准建议对不同的实体名称不要重用，并且不建议使用 此项，遵循本标准的证书签发机构不应生成带有主体唯一标识符的证书，但是在应用过程中应该能够解 析唯一标识符并进行对比。
+
+===== 扩展项 extensions
+
+// TODO: This is an error, it should point to 5.2.4 instead of 5.2.3
+//本项是一个或多个证书扩展的序列（SEQUENCE),其内容和数据结构在5.2.3中定义。
+
+本项是一个或多个证书扩展的序列（SEQUENCE),其内容和数据结构在<<cert-extensions>>中定义。
+
+[[cert-extensions]]
+==== 证书扩展域及其数据结构
+
+===== 证书扩展
+
+本标准定义的证书扩展项提供了把一些附加属性同用户或公钥相关联的方法以及证书结构的管理 方法。数字证书允许定义标准扩展项和专用扩展项。每个证书中的扩展可以定义成关键性的和非关键 性的，一个扩展含有三部分，它们分别是扩展类型、扩展关键度和扩展项值。扩展关键度（extension criticality)告诉一个证书的使用者是否可以忽略某一扩展类型。证书的应用系统如果不能识别关键的 扩展时，必须拒绝接受该证书，如果不能识别非关键的扩展，则可以忽略该扩展项的信息。
+
+本条定义一些标准的扩展项。需要特别注意的是，在实际应用过程中，如果采用了关键性的扩展， 可能导致在一些通用的应用中无法使用该证书。
+
+每个扩展项包括一个对象标识符OID和一个ASN.1结构。当证书中出现一个扩展时，OID作为 extnID项出现，其对应的ASN.1编码结构就是8 bit字符串extnValue的值。一个特定的证书中特定 的扩展只可出现一次。例如，一个证书只可以包含一个认证机构密钥标识符扩展。一个扩展中包含一 个布尔型的值用来表示该扩展的关键性，其缺省值为FALSE，即非关键的。每个扩展的正文指出了关键性项的可接收的值。
+
+遵循本标准的CA必须支持密钥标识符、基本限制、密钥用法和证书策略等扩展。如果CA签发的 证书中的主体项为空序列，该CA就必须支持主体可替换名称扩展。其他的扩展是可选的。CA还可 以支持本标准定义之外的其他的扩展。证书的颁发者必须注意，如果这些扩展被定义为关键的，则可能会给互操作性带来障碍。
+
+遵循本标准的应用必须至少能够识别密钥用法、证书策略、主体替换名称、基本限制、名称限制、策 略限制和扩展的密钥用法。另外，本标准建议还能支持认证机构(authority)和主体密钥标识符(subject key identifier)以及策略映射扩展。
+
+===== 标准扩展
+
+====== 综述
+
+本项定义数字证书的标准证书扩展，每个扩展与GB/T 16264.8中定义的一个 OID 相关。这些 OID都是id-ce的成员，其定义如下：
 
 [source]
 ----
-SM2PublicKey ::= BIT STRING
+id-ce   OBJECT IDENTIFIER   ::=   {  joint-iso-ccitt(2) ds(5) 29 }
 ----
 
-`SM2PublicKey` is of type `BIT STRING`, content is `04 | X | Y`, within that, `X`
-and `Y` specifies the x- and y-coordinates of the public key, each of 256-bits
-long.
+====== 颁发机构密钥标识符 authorityKeyIdentifier
 
-=== Encrypted Data Format
+颁发机构密钥标识符扩展提供了一种方式，以识别与证书签名私钥相应的公钥。当颁发者由于有 多个密钥共存或由于发生变化而具有多个签名密钥时使用该扩展。识别可基于颁发者证书中的主体密
 
-SM2 encrypted data format as described in ASN.1 is:
+钥标识符或基于颁发者的名称和序列号。
+
+相应CA产生的所有证书应包括authorityKeyIdentifier扩展的KeyIdentifier项，以便于链的建立。 CA以 "`自签`" (self-signed) 证书形式发放其公钥时，可以省略认证机构密钥标识符。此时，主体和认证 机构密钥标识符是完全相同的。
+
+本项既可用作证书扩展亦可用作CRL扩展。本项标识用来验证在证书或CRL上签名的公开密 钥。它能辨别同一 CA使用的不同密钥 (例如，在密钥更新发生时）。
+
+======= 定义
 
 [source]
 ----
-SM2Cipher ::= SEQENCE{
-  XCoordinate     INTEGER,                -- x-coordinate
-  YCoordinate     INTEGER,                -- y-coordinate
-  HASH            OCTET STRING SIZE(32),  -- hash value
-  CipherText      OCTET STRING            -- ciphertext
+id-ce-authorityKeyIdentifier OBJECTIDENTIFIER   ::= {id-ce 35}
+
+AuthorityKeyIdentifier ::= SEQUENCE {
+  KeyIdentifier                [0] KeyIdentifier  OPTIONAL,
+  authorityCertIssuer          [1] GeneralNames OPTIONAL,
+  authorityCertSerialNumber   [2] CertificateSerialNumber OPTIONAL }
+
+(WITH COMPONENTS  {..., authorityCertIssuer PRESENT,
+authorityCertSerialNumber PRESENT} |
+WITH COMPONENTS  {...，authorityCertIssuer ABSENT,
+authorityCertSerialNumber ABSENT})
+
+KeyIdentifier ::= OCTET STRING
+----
+
+======= 说明
+
+KeyIdentifier项的值应从用于证实证书签名的公钥导出或用产生唯一值的方法导出。公开密钥的 密钥标识符KeyIdentifier可采用下述两种通用的方法生成：
+
+[loweralpha]
+. KeyIdentifier 由 BIT STRING subjectPublicKey 值的 160-bit SHA-1 散列值组成（去掉标签、 长度和若干不使用的字节）;
+. KeyIdentifier 由 0100 加上后跟的 BIT STRING subjectPublicKey 值的 SHA-1 散列值中最低 位的60 bit组成。
+
+此密钥可以通过KeyIdentifier字段中的密钥标识符来标识，也可以通过此密钥的证书的标识（给出 anthorityCertIssuer字段中的证书颁发者以及authorityCertSerialNumber字段中的证书序列号）来标 识，或者可以通过密钥标识符和此密钥的证书标识来标识。如果使用两种标识形式，那么，证书或CRL 的颁发者应保证它们是一致的。对于颁发机构的包含扩展的证书或CRL的所有密钥标识符而言，每个 密钥标识符应该是唯一的。不要求支持此扩展的实现能够处理authorityCertIssuer字段中的所有名字 形式。
+
+证书认证机构指定或者自动产生证书序列号，这样颁发者和证书序列号相结合就唯一地标识了一 份证书。
+
+除自签证书之外，所有的证书必须包含本扩展，而且要包含KeyIdentifier项。如果证书的颁发者的 证书有SubjectKeyIdentifier扩展，则本扩展中KeyIdentifier项必须与颁发者的证书的 SubjectKeyIdentifier扩展的值一致，如果证书的颁发者的证书没有SubjectKeyIdentifier扩展，则可以 使用上边介绍的两种方法之一来产生。
+
+结构中的keyIdentifier、authorityCertSerialNumber建议为必选，但本扩展必须是非关键的。
+
+====== 主体密钥标识符 subjectKeyIdentifier
+
+本项提供一种识别包含有一个特定公钥的证书的方法。此扩展标识了被认证的公开密钥。它能够 区分同一主体使用的不同密钥（例如，当密钥更新发生时）。
+
+======= 定义
+[source]
+----
+id-ce-subjectKeyIdentifier OBJECT IDENTIFIER  ::= { id-ce 14 }
+SubjectKeyIdentifier  ::= KeyIdentifier
+----
+
+======= 说明
+
+
+对于使用密钥标识符的主体的各个密钥标识符而言，每一个密钥标识符均应是唯一的。此扩展项总是非关键的。
+
+所有的CA 证书必须包括本扩展；而且CA 签发证书时必须把 CA  证书中本扩展的值赋给终端实体证书 AuthorityKeyIdentifier 扩展中的 KeyIdentifier项。CA 证书的主体密钥标识符应从公钥中或者生成唯一值的方法中导出。终端实体证书的主体密钥标识符应从公钥中导出，有两种通用的方法从公钥中生成密钥标识符（见<<subject-public-key-info>>）。
+
+
+====== 密钥用法 KeyUsage
+
+本项说明已认证的公开密钥用于何种用途。
+
+======= 定义
+
+[source]
+----
+id-ce-keyUsage OBJECT IDENTIFIER ::= { id-ce 15 }
+KeyUsage ::= BIT STRING {
+  digitalSignature    (0),
+  nonRepudiation     (1),
+  keyEncipherment    (2),
+  dataEncipherment   (3),
+  keyAgreement       (4),
+  keyCertSign       (5),
+  cRLSign           (6),
+  encipherOnly       (7),
+  decipherOnly      (8) }
+----
+
+======= 说明
+
+KeyUsage 类型中的用法如下：
+
+. digitalSignature: 验证下列b) 、f) 或g) 所标识的用途之外的数字签名：
+
+. nonRepudiation: 验证用来提供抗抵赖服务的数字签名，这种服务防止签名实体不实地拒绝某种行为（不包括如f）或 g) 中的证书或 CRL 签名)；
+
+. KeyEncipherment: 加密密钥或其他安全信息，例如用于密钥传输；
+
+. dataEncipherment: 加密用户数据，但不包括上面c) 中的密钥或其他安全信息；
+
+. keyAgreement: 用作公开密钥协商密钥；
+
+. keyCertSign: 用于验证证书的CA 签名；
+
+. cRLSign：验证CRL的CA 签名；
+
+. encipherOnly: 当本位与已设置的 keyAgreement位一起使用时，公开密钥协商密钥仅用于加密数据（本位与已设置的其他密钥用法位一起使用的含义未定义）；
+
+. decipherOnly: 当本位与已设置的 keyAgreement 位一起使用时，公开密钥协商密钥仅用于解密数据（本位与已设置的其他密钥用法位一起使用的含义未定义）。
+
+keyCertSign只用于CA证书。如果KeyUsage被置为keyCertSign和基本限制扩展存在于同一证 书之中，那么，此扩展的CA成分的值应被置为TRUE。CA还可使用keyUsage中定义的其他密钥用法 位，例如，提供鉴别和在线管理事务完整性的digitalSignature。
+
+若缺少keyAgreement位，则本标准不定义encipherOnly位的含义。若确定encipherOnly位，且 keyAgreement位也被确定时，主体公钥可只用于加密数据，同时执行密钥协议。
+
+若未设置keyAgreement位，则不定义decipherOnly位的含义。若确定decipherOnly位，且key- Agreement位也被确定时，主体公钥可只用于脱密数据，同时执行密钥协议。
+
+所有的CA证书必须包括本扩展，而且必须包含keyertSign这一用法。此扩展可以定义为关键的 或非关键的，由证书颁发者选择。
+
+如果此扩展标记为关键的，那么该证书应只用于相应密钥用法位置为"`1`"的用途。
+
+如果此扩展标记为非关键的，那么它指明此密钥的预期的用途或其他多种用途，并可用于查找具有 多密钥/证书的实体的正确密钥/证书。它是一个咨询项，并不意指此密钥的用法限于指定的用途。置 为"`0`"的位指明此密钥不是预期的这一用途。如果所有位均为"`0`"，它指明此密钥预期用于所列用途之 外的某种用途。
+
+在应用中，使用该扩展项对证书类型的进行区别，当设置了 c)、d)、h)、i)位中的一项时，表示该证书 为加密证书；当设置了 a)、b)位中的一项时，表示该证书为签名证书。
+
+====== 扩展密钥用途 extKeyUsage
+
+本项指明已验证的公开密钥可以用于一种用途或多种用途，它们可作为对密钥用法扩展项中指明 的基本用途的补充或替代。
+
+======= 定义
+
+// TODO: original document missing "="
+// id-ce-extKeyUsage OBJECT IDENTIFIER ：： {id-ce 37}
+//
+
+[source]
+----
+id-ce-extKeyUsage OBJECT IDENTIFIER   ::= {id-ce 37}
+ExtKeyUsageSyntax ::= SEQUENCE SIZE (1..MAX) OF KeyPurposeId
+KeyPurposeId      ::= OBJECT IDENTIFIER
+----
+
+
+======= 说明
+
+密钥的用途可由有此需要的任何组织定义。用来标识密钥用途的客体标识符应按照 GB/T 17969.1—2000 来分配。
+
+由证书颁发者确定此扩展是关键的或非关键的。
+
+如果此扩展标记为关键的，那么，此证书应只用于所指示的用途之一。
+
+如果此扩展标记为非关键的，那么，它指明此密钥的预期用途或其他用途，并可用于查找多密钥/证 书的实体的正确密钥/证书。它是一个咨询项，并不表示认证机构将此密钥的用法限于所指示的用途。 然而，进行应用的证书仍然可以要求指明特定的用途，以便证书为此应用接受。
+
+如果证书包含关键的密钥用途项和关键的扩展密钥项，那么，两个项应独立地处理，并且证书应只 用于与两个项一致的用途。如果没有与两个项一致的用途，那么，此证书不能用于任何用途。
+
+本标准定义下列密钥用途：
+
+[source]
+----
+id-kp OBJECT IDENTIFIER ::= { id-pkix 3 }
+id-kp-serverAuth OBJECT IDENTIFIER ::= { id-kp 1 }
+----
+
+* TLS Web server 鉴别
+
+* Key usage 可以设置为 digitalSignature, keyEncipherment 或 keyAgreement
+id-kp-clientAuth OBJECT IDENTIFIER ::= { id-kp 2 }
+
+* TLS Web server 鉴别
+
+* Key usage 可以设置为 digitalSignature 和/或 keyAgreement
+
+[source]
+----
+id-kp-codeSigning OBJECT IDENTIFIER ::= { id-kp 3 }
+----
+
+* 可下载执行代码的签名
+* Key usage 可以设置为 digitalSignature
+
+[source]
+----
+id-kp-emailProtection OBJECT IDENTIFIER ::= { id-kp 4 }
+----
+
+* E-mail 保护
+* Key usage 可以设置为digitalSignature, nonRepudiation 和/或（keyEncipherment 或 _
+keyAgreement）
+
+[source]
+----
+id-kp-timeStamping OBJECT IDENTIFIER ::= { id-kp 8 }
+----
+
+* 将对象的散列值与同一时间源提供的时间绑定
+* Key usage 可以设置为 digitalSignature, nonRepudiation
+
+[source]
+----
+id-kp-OCSPSigning OBJECT IDENTIFIER ::= { id-kp 9 }
+----
+
+* OCSP 应答签名
+* Key usage 可以设置为 digitalSignature, nonRepudiation
+
+====== 私有密钥使用期 privateKeyUsagePeriod
+
+本项指明与已验证的公开密钥相对应的私有密钥的使用期限。它只能用于数字签名密钥。
+
+======= 定义
+
+[source]
+----
+id-ce-privateKeyUsagePeriod OBJECT IDENTIFIER ::= { id-ce 16 }
+PrivateKeyUsagePeriod ::= SEQUENCE{
+  notBefore     [0] GeneralizedTime OPTIONAL,
+  notAfter      [1] GeneralizedTime OPTIONAL}
+----
+
+======= 说明
+
+notBefore 字段指明私有密钥可能用于签名的最早日期和时间。如果没有 notBefore字段，就不提供有关私有密钥有效使用期何时开始的信息。NotAfter 字段指明私有密钥可以用于签名的最迟日期和时间。如果没有 notAfter 字段，就不提供有关私有密钥有效使用期何时结束的信息。
+
+这个扩展总是为非关键的。
+
+NOTE: 私有密钥有效使用期可以与证书有效性周期指明的已验证的公开密钥有效性不同，
+就数字签名密钥而言，签名的私有密钥使用期一般比验证公开密钥的时间短。
+
+NOTE: 数字签名的验证者想要检查直到验证时刻此密钥是否未被撤销，例如，由于密钥泄露，
+那么，在验证时，对公开密钥而言的有效证方应仍存在。在公开密钥的证书期满之后，
+签名验证者不能依赖 CRL 所统治的协议。
+
+
+====== 证书策略 certificatePolicies
+
+本项列出了由颁发的 CA 所认可的证书策略，这些策略适用于证书以及关于这些证书策略的任选的限定符信息。
+
+证书策略扩展包含了一系列策略信息条目，每个条目都有一个OID和一个可选的限定条件。这个可选的限定条件不能改变策略的定义。
+
+在用户证书中，这些策略信息条目描述了证书发放所依据的策略以及证书的应用目的；在CA证书中，这些策略条目制定了包含这个证书的验证路径和策略集合。具有特定策略需求的应用系统应该拥有它们将接受的策略的列表，并把证书中的策略 OID 与该列表进行比较。如果该扩展是关键的，则路径有效性软件必须能够解释该扩展（包括选择顶限定语），否则必须拒绝该证书。
+
+为了提高互操作性，本标准建议策略信息条目中只包含一个OID，如果一个OID不够，建议使用本 项定义的限定语。
+
+======= 定义
+
+[source]
+----
+id-ce-certificatePolicies OBJECT IDENTIFIER ::= { id-ce 32 }
+
+certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
+
+PolicyInformation ::= SEQUENCE{
+  policyIdentifier    CertPolicyId,
+  policyQualifiers    SEQUENCE SIZE (1..MAX) OF
+                        PolicyQualifierInfo OPTIONAL}
+
+CertPolicyId ::= OBJECT IDENTIFIER
+
+PolicyQualifierInfo ::= SEQUENCE{
+  policyQualifierId   PolicyQualifierId,
+  qualifier            ANY DEFINED BY policyQualifierId }
+
+--policyQualifierlds for Internet policy qualifiers
+
+id-qt            OBJECT IDENTIFIER ::= { id-pkix 2 }
+id-qt-cps        OBJECT IDENTIFIER ::= { id-qt  1  }
+id-qt-unotice    OBJECT IDENTIFIER ::= { id-qt  2  }
+PolicyQualifierId ::= OBJECT IDENTIFIER ( id-qt-cps | id-qt-unotice)
+
+Qualifier ::= CHOICE {
+  cPSuri        CPSuri,
+  userNotice    UserNotice }
+
+CPSuri    ::= IA5String
+
+UserNotice  ::= SEQUENCE {
+  noticeRef      NoticeReference OPTIONAL,
+  explicitText  DisplayText OPTIONAL }
+
+NoticeReference ::= SEQUENCE {
+  organization    DisplayText,
+  noticeNumbers   SEQUENCE OF INTEGER }
+
+DisplayText ::= CHOICE {
+  visibleString    VisibleString (SIZE (1..200)),
+  bmpString        BMPString (SIZE (1..200)),
+  utf8String      UTF8String  (SIZE (1..200)) }
+----
+
+======= 说明
+
+本项定义了两种策略限定语，以供证书策略制定者和证书颁发者使用。限定语类型为CPS Pointer 和User Notice限定语。
+
+CPS Pointer 限定语包含一个 CA 发布的 CPS (Certification Practice Statement) ，指示字的形式 为 URI。
+
+User notice有两种可选字段：noticeRef字段和explicitText字段a NoticeRef字段命名一个团体， 并通过记数识别该团体所做的一个专用文本声明。ExplicitText字段在证书内直接包括文本声明，该 字段是一个最多含有200字符的串。如果noticeRef和explicitText选项都在同一个限定语中，且如果 应用软件可以找出由noticeRef选项指明的通知文本，则应展示该文本，否则应展示explicitText串。
+
+
+====== 策略映射 policyMappings
+
+本项只用于CA证书。它列出一个或多个OID对，每对包括一个issuerDomainPolicy和一个subjectDomainPolicy。这种成对形式表明，颁发者CA认为其issuerDomainPolicy与主体CA的subject- DomainPolicy是等效的。颁发者CA的用户可以为某应用接收一个issuerDomainPolicy。策略映射告知颁发者CA的用户，哪些同CA有关的策略可以与它们接收到的策略是等效的。
+
+======= 定义
+[source]
+----
+id-ce-policyMappings OBJECT IDENTIFIER ::= { id-ce 33 }
+
+PolicyMappingsSyntax ::= SEQUENCE SIZE(1..MAX) OF SEQUENCE{
+  issuerDomainPolicy    CertPolicyId,
+  subjectDomainPolicy    CertPolicyId}
+----
+
+======= 说明
+
+策略不会被映射到或来自特殊的值anyPolicy。
+
+该扩展可由CA和/或应用支持。证书颁发者可以将该扩展选择为关键或非关键的。本标准推荐为关键的，否则一个证书用户就不能正确解释发布的CA设定的规则。
+
+NOTE: 政策映射的一个例子如下:美国政府可有一个称之为加拿大贸易的政策，加拿大政府可有一个称之为美国贸 易的政策。当两个政策可有区别地被标识并被定义时，两国政府之间可有个协定：就相关的用途，在两个政策 所隐含的规则之内，允许认证路径延伸过境。
+
+NOTE: 政策映射意味着作出有关决策时会耗费显著的管理开销和涉及相当大的劳动和委任人员。一般而言，最好的 办法是同意使用比应用政策映射更广的全球的公共政策。在上述例子中，美国，加拿大和墨西哥同意一项公 共政策，用于北美贸易那将是最好的。
+
+NOTE: 预计政策映射实际上只能用于政策声明非常简单的有限环境。
+
+
+====== 主体替换名称 subjectAltName
+
+
+本项包含一个或多个替换名（可使用多种名称形式中的任一个)供实体使用，CA把该实体与认证的公开密钥绑定在一起。
+
+主体替换名扩展允许把附加身份加到证书的主体上。所定义的选项包括因特网电子邮件地址、 DNS名称、IP地址和统一资源标识符(URI)。还有一些纯本地定义的选项。可以包括多名称形式和每 个名称形式的多个范例。当这样的身份被附加到一个证书中时，必须使用主体选择名称或颁发者选择 名称扩展。由于主体可替换名被认为是与公钥绑在一起的，主体替换名的所有部分必须由CA认证。
+
+
+======= 定义
+
+[source]
+----
+id-ce-subjectAltName OBJECT IDENTIFIER ::= { id-ce 17 }
+
+SubjectAltName  ::= GeneralNames
+GeneralNames    ::= SEQUENCE SIZE(1..MAX) OF GeneralName
+GeneralName     ::= CHOICE{
+  otherName                    [0]   OtherName,
+  rfc822Name                  [1]   IA5String,
+  dNSName                      [2]   IA5String,
+  x400Address                  [3]   ORAddress,
+  directoryName                [4]   Name,
+  ediPartyName                [5]   EDIPartyName,
+  uniformResourceIdentifier    [6]   IAS String,
+  iPAddress                    [7]   OCTET STRING,
+  registeredID                [8]   OBJECT IDENTIFIER }
+
+OTHERNAME ::= SEQUENCE {
+  type-id          OBJECT IDENTIFIER,
+  value        [0] EXPLICIT ANY DEFINED BY type-id }
+
+EDIPartyName::= SEQUENCE{
+  nameAssigner    [0]  DirectoryString  OPTIONAL,
+  partyName        [1]  DirectoryString  }
+----
+
+======= 说明
+
+GeneralName类型中可替换的值是下列各种形式的名称：
+
+* otherName是按照OTHER-NAME信息客体类别实例定义的任一种形式的名称；
+
+* rfc822Name是按照Internet RFC822定义的Internet电子邮件地址；
+
+* dNSName是按照RFC 1034定义的Internet域名；
+
+* x400Address 是按照 GB/T 16284. 4—1996 定义的 O/R 地址；
+
+* directoryName 是按照 ISO/IEC 9594-2:2001 定义的目录名称；
+
+* ediPartyName是通信的电子数据交换双方之间商定的形式名称；nameAssigner成分标识了
+
+分配partyName中唯一名称值的机构；
+
+* uniformResourceIdentifier 是按照 Internet RFC1630 定义的用于 WWW 的 UniformRAe-
+
+sourceIdentifier，RFC1738中定义的URL语法和编码规则；
+
+* iPAddress是按照Internet RFC791定义的用二进制串表示的Internet Protocol地址；
+
+* registeredID是按照GB/T 17969. 1—2000对注册的客体分配的标识符。
+
+CA不得签发带有subjectAltNames却包含空GeneralName项的证书。如果证书中的唯一主体身 份是一个选择名称格式 (如一个电子邮件地址），则主体的甄别名必须是空的（一个空序列），且subjectAltName扩展必须存在。如果主体字段包括一个空序列，则subjectAltName扩展必须标识为关键性的。如果出现subjectAltName扩展，则序列必须至少包含一个条目。
+
+对GeneralName类型中使用的每个名称形式，应有一个名称注册系统，以保证所使用的任何名称 能向证书颁发者和证书使用者无歧义地标识一个实体。
+
+此扩展可以是关键的或非关键的，由证书颁发者选择。不要求支持此扩展的实现能处理所有名称 形式。如果此扩展标记为关键的，那么，至少应能识别和处理存在的名称形式之一，否则，应认为此证书 无效。除先前的限制以外，允许证书使用系统不理睬具有不能识别的或不被支持的名称形式的任何名称。倘若，证书的主体项包含无二义地标识主体的目录名称，推荐将此项标记为非关键的。
+
+NOTE: TYPE-IDENTIFIER类别的使用在GB/T 16262. 2—2006的附录A和附录C中描述。
+
+NOTE: 如果存在此扩展并标记为关键的，证书的subject项可以包含空名称 (例如，相关可甄别名的一个"`0`"序列)，在 此情况下，主体只能用此扩展中的名称或一些扩展名称来标识。
+
+NOTE: 进一步说明可参考RFC2459中的4.2.1.7。
+
+
+====== 颁发者替换名称 issuerAltName
+
+本项包含一个或多个替换名称(可使用多种名称形式中的任一个），以供证书或CRL颁发者使用。
+
+======= 定义
+
+[source]
+----
+id-ce-issuerAltName OBJECT IDENTIFIER   ::= { id-ce 18 }
+IssuerAltName   ::= GeneralName
+----
+
+======= 说明
+
+此项可以是关键的或非关键的，由证书或CRL颁发者选择。不要求支持此扩展的实际应用能处理 所有名称形式。如果此扩展标记为关键的，那么至少应能识别和处理存在的名称形式之一，否则，应认 为此证书无效。除先前的限制以外，允许证书使用系统不理睬具有不能识别的或不支持的名称形式的任何名称。倘若，证书或CRL的颁发者项包含了一个明确标识颁发机构的目录名称，推荐将此项标记 为非关键的。
+
+如果存在此扩展，并标记为关键的，证书或CRL的issuer项可以包含空名称(例如，对应可甄别名 的一个"`0`"序列），在此情况下，颁发者只能用名称或此扩展中的一些名称来标识。颁发者替换名称必 须按 5.2.3.4 的说明进行编码。
+
+====== 主体目录属性 subjectDirectoryAttributes
+
+本项为证书主体传送其期望的任何目录属性值。
+
+======= 定义
+
+[source]
+----
+id-ce-subjectDirectoryAttributes OBJECT IDENTIFIER ::= { id-ce 9 }
+SubjectDirectoryAttributes  ::= SEQUENCE SIZE (1..MAX) OF Attribute
+AttributesSyntax            ::= SEQUENCE SIZE (1..MAX) OF Attribute
+----
+
+======= 说明
+
+该扩展总是非关键的。
+
+====== 基本限制 basicConstraints
+
+本项用来标识证书的主体是否是一个CA，通过该CA可能存在的认证路径有多长。
+
+======= 定义
+
+//TODO: the document had this before, which is wrong
+//CABOOLEAN DEFAULT FALSE,
+//pathLenConstraintINTEGER (0.. MAX) OPTIONAL}
+
+[source]
+----
+id-ce-basicConstraints OBJECT IDENTIFIER ::= { id-ce 19 }
+BasicConstraintsSyntax  ::= SEQUENCE{
+  CA                  BOOLEAN DEFAULT FALSE,
+  pathLenConstraint   INTEGER (0..MAX) OPTIONAL}
+----
+
+======= 说明
+
+
+CA字段标识此公钥证书是否可用来验证证书签名。
+
+PathLenConstraint字段仅在CA设置为TRUE时才有意义。它给出此证书之后认证路径中最多
+
+的CA证书数目。0值表明在路径中只可以向终端实体签发证书，而不可以签发下级CA证书。Path-LenConstraint字段出现时必须大于或等于0。如果在认证路径的任何证书中未出现 pathLenConstraint字段，则对认证路径的允许长度没有限制。
+
+CA证书中必须包括本扩展，而且必须是关键的，否则，未被授权为CA的实体便可以签发证书，同 时证书使用系统会在不知情的情况下使用这样的证书。
+
+如果此扩展存在，并标记为关键的，那么：
+
+* 如果CA字段的值置为FALSE，则密钥用法不能包含keyCertSign这一用法，其公开密钥应不 能用来验证证书签名；
+
+* 如果CA字段的值置为TRUE，并且pathLen Constraint存在，则证书使用系统应检查被处理 的认证路径是否与pathLenConstraint的值一致。
+
+NOTE: 如果此扩展不存在或标记为非关键项的并且未被证书使用系统认可，该证书被系统视为终端用户证书，并且不能用来验证证书签名。
+
+NOTE: 为限制一证书主体只是一个端实体，即，不是CA，颁发者可以在扩展中只包含一个空SEQUENCE值的扩展项。
+
+
+====== 名称限制 nameConstraints
+
+本项仅在一张CA证书使用，它指示了一个名称空间，在此空间设置了认证路径可以在后续证书中主体名称中被找到。
+
+======= 定义
+
+[source]
+----
+id-ce-nameConstraints OBJECT IDENTIFIER ::= { id-ce 30 }
+
+NameConstraintsSyntax ::= SEQUENCE {
+  permittedSubtrees    [0]  GeneralSubtrees OPTIONAL,
+  excludedSubtrees    [1]  GeneralSubtrees OPTIONAL }
+
+GeneralSubtrees ::= SEQUENCE SIZE (1..MAX) OF GeneralSubtree
+GeneralSubtree  ::= SEQUENCE {
+  base          GeneralName,
+  minimum    [0]  BaseDistance DEFAULT 0,
+  maximum    [1]  BaseDistance OPTIONAL }
+
+BaseDistance ::= INTEGER (0..MAX)
+----
+
+======= 说明
+
+如果存在permittedSubtrees和excludedSubtrees字段，则它们每个都规定一个或多个命名子树， 每个由此子树的根的名称或任选处于其子树内的任意节点名称来定义，子树范围是一个由上界和/或下界限定的区域。如果permittedSubtrees存在，在主体CA和认证路径中后续CA颁发的所有证书中， 只有那些在子树中具有与permittedSubtrees字段规定主体名称相同的证书才是可接受的。如果excludedSubtrees存在，由主体CA或认证路径中后续CA颁发的所有证书中，同excludedSubtrees规定 主体名称相同的任何证书都是不可接受的。如果PermittedSutrees和excluded Subtrees都存在并且名 称空间重叠，则优先选用排斥声明（exclusion statement）。
+
+
+
+通过GeneralName字段定义的命名格式，需要那些具有良好定义的分层结构的名称形式用于这些 字段，Directory Name名称形式满足这种要求；使用这些命名格式命名的子树对应于DIT子树。在应 用中不需要检查和识别所有可能的命名格式。如果此扩展标记为关键项，并且证书使用中不能识别用 于base项的命名格式，应视同遇到未识别的关键项扩展那样来处理此证书。如果此扩展标记为非关键 的，并且证书在使用中不能识别用于base项的命名格式，那么，可以不理睬此子树规范。当证书主体具 有同一名称形式的多个名称时（在directory Name名称形式情况下，包括证书主体项中的名称，如果非 "`0`"），对于同一名称形式的名称限制应检验所有这些名称一致性。
+
+可以对主体名称或主体选择名称进行限制。只有当确定的名称格式出现时才应用限制。如果证书 中没有类型的名称，则证书是可以接受的。当对于命名格式限制的一致性测试证书主体名称时，即使扩 展中标识为非关键项也应予以处理。
+
+Minimum字段规定了子树内这一区域的上边界。最后的命名形式在规定的级别之上的所有名称 不包含在此区域内。等于 "`0`" (默认）的minimum值对应于此基部（base) ，即，子树的顶节点。例如，如 果minimum置为 "`1`" ，则命名子树不包含根节点而只包含下级节点。
+
+Maximum字段规定了子树内这一区域的下边界。最后的命名形式在规定的级别之下所有名称不包含在此区域内。最大值 "`0`" 对应于此基部(base)，即，子树的顶。不存在的maximum字段指出不应把 下限值施加到子树内的此区域上。例如，如果maximum置为 "`1`" ，那么，命名子树不包含除子树根节点 及其直接下级外的所有节点。
+
+本标准建议将它标记为关键项，否则，证书用户不能检验认证路径中的后续证书是否位于签发CA 指定的命名域中。
+
+如果此扩展存在，并标记为关键的，则证书用户系统应检验所处理的认证路径与此扩展中的值是否一致。
+
+本标准中，任何名称格式都不使用最小和最大字段，最小数总为0，最大数总是空缺的。
+
+====== 策略限制 policyConstraints
+
+本项用于向 CA 颁发的证书中，以两种方式限制路经确认。
+它可以用来禁止策略映射或要求路径中的每个证书包含一个认可的策略标示符。
+
+======= 定义
+
+[source]
+----
+id-ce-policyConstraints OBJECT IDENTIFIER ::= { id-ce 36 }
+
+PolicyConstraints ::= SEQUENCE{
+  requireExplicitPolicy   [0] SkipCerts OPTIONAL,
+  inhibitPolicyMapping    [1] SkipCerts OPTIONAL }
+
+SkipCerts ::= INTEGER (0..MAX)
+----
+
+======= 说明
+
+如果 requireExplicitPolicy字段存在，并且证书路径包含一个由指定 CA签发的证书，所有在此路径中的证书都有必要在证书扩展项中包含合适的策略标识符。合适的策略标识符是由用户在证书策略中定义的标识符，或声明通过策略映射与其等价的策略的标识符。指定的 CA 是指包含此扩展信息的认证机构（如果 requireExplicitpolicy 的值为 "`0`" ）或是认证路径中后续认证机构CA（由非 "`0`" 值指示的）。
+
+如果 inhibitPolicyMapping 字段存在，它表明在认证路径中从所指定的 CA 开始直到认证路径结束为止的所有证书中，不允许策略映射。指定的CA指包含此扩展信息的认证机构（如果 inhibitPolicyMapping的值为 "`0`") 或是认证路径中后续认证机构（由非 "`0`" 值指示的）。
+
+SkipCerts类型的值表示在某一限制生效之前需要在认证路径中跳过证书的个数。
+
+此扩展由证书颁发者选择是关键的还是非关键的。本标准建议将它标记为关键的，否则证书用户 可能不能正确地解释认证机构设定的规则。
+
+
+====== 证书撤销列表分发点 CRLDistributionPoints
+
+CRL分发点扩展用来标识如何获得CRL信息，本扩展仅作为证书扩展使用。它可用于认证机构 证书，终端实体公钥证书以及属性证书中。本项指定了 CRL分发点或证书用户的査阅点以确定证书是 否已被撤销。证书用户能从可用分发点获得一个CRL, 或者可以从认证机构目录项获得当前完整的 CRL。
+
+======= 定义
+
+[source]
+----
+id-ce-CRLDistributionPoints OBJECT IDENTIFIER ::= { id-ce 31 }
+
+cRLDistributionPoints ::= { CRLDistPointsSyntax }
+
+CRLDistPointsSyntax   ::= SEQUENCE SIZE (1..MAX) OF DistributionPoint
+DistributionPoint     ::= SEQUENCE {
+  distributionPoint      [0]  DistributionPointName OPTIONAL,
+  reasons                [1]  ReasonFlags OPTIONAL,
+  cRLIssuer              [2]  GeneralNames OPTIONAL }
+
+DistributionPointName ::= CHOICE {
+  fullName                  [0]  GeneralNames,
+  nameRelativeToCRLIssuer    [1]  RelativeDistinguishedName }
+
+ReasonFlags ::= BITSTRING {
+  unused                  (0),
+  keyCompromise           (1),
+  CACompromise            (2),
+  affiliationChanged      (3),
+  superseded              (4),
+  cessationOfOperation    (5),
+  certificateHold         (6) }
+----
+
+======= 说明
+
+
+distributionPoint字段标识如何能够获得CRL的位置。如果此字段缺省，分发点名称默认为CRL 颁发者的名称。
+
+当使用fullName替代名称或应用默认时，分发点名称可以有多种名称形式。同一名称（至少用其 名称形式之一)应存在于颁发CRL的分发点扩展的distrubutionPoint字段中。不要求证书使用系统能 处理所有名称形式。它可以只处理分发点提供的诸多名称形式中的一种。如果不能处理某一分发点的 任何名称形式，但能从另一个信任源得到必要的撤销信息，例如另一个分发点或CA目录项，则证书应
+
+用系统仍能使用该证书。
+
+如果CRL分发点被赋于一个直接从属于CRL颁发者的目录名称的目录名，则只能使用nameRelativeToCRLIssuer字段。此时jameRelativeToCRLIssuer字段传送与CRL颁发者目录名称有关的可 甄别名。
+
+Reasons字段指明由此CRL所包含的撤销原因。如果没有reasons字段，相应的CRL分发点发布 包含此证书（如果此证书已被撤销）的项的CRL，而不管撤销原因。否则，reasons值指明相应的CRL 分发点所包含的那些撤销原因。
+
+CRLIssuer字段标识颁发和签署CRL的机构。如果没有此字段, CRL颁发者的名称默认为证书 颁发者的名称。
+
+此扩展可以是关键的或非关键的，由证书颁发者选择，建议该扩展设置为非关键的，但CA和应用 应支持该扩展。
+
+如果该扩展标记为关键，CA则要保证分发点包含所用的撤销原因代码keyCompromise和/或CA- Compromise。若没有首先从一个包含了原因代码keyCompromise (对终端实体证书）或 CACompromise (对CA证书）的指定的分发点检索和核对CRL, 证书使用系统将不使用该证书。在分 配点为所有撤销原因代码和由CA (包括作为关键扩展的CRLDistribiitionPoint) 发布的所有证书分配 CRL信息的项中，CA不需要在CA项发布一个完整的CRL。
+
+如果此扩展标记为非关键的，当证书使用系统未能识别此扩展项类型时，则只有在下列情况中，该系统使用此证书：
+
+* 它能从CA获得一份完整CRL并检查它（通过在CRL中设有发布点扩展项来指示最近的 CRL是完整的）；
+
+* 根据本地策略不要求撤销检查；
+
+* 用其他手段完成撤销检查。
+
+NOTE: 一个以上的CRL分发者对应一个证书CRL颁发者是可能的。这些CRL分发者和签发CA的协调是CA策 略的一个方面。
+
+NOTE: 证书撤销列表CRL的应用，请参照RFC2459中的第5章。
+
+
+====== 限制所有策略 inhibitAnyPolicy
+
+本项指定了一个限制，它指出了任何策略，对于从指定CA开始的认证路径中的所有证书的证书策 略，都不是显式匹配。指定的CA要么是包含这个扩展的证书的主体CA (如果inhibitAnyPolicy值为0) ， 要么是认证路径（由非0值指定）中后继认证机构CA。
+
+======= 定义
+
+[source]
+----
+id-ce-inhibitAnyPolicy OBJECT IDENTIFIER ::= { id-ce 54 }
+InhibitAnyPolicy    ::= SkipCerts
+SkipCerts           ::= INTEGER(0..MAX)
+----
+
+======= 说明
+
+本扩展由证书颁发者选择关键项还是非关键项。建议它标记为关键项，否则证书用户可能不能正 确地解释认证机构CA设定的规则。
+
+====== 最新证书撤销列表freshestCRL
+
+最新CRL扩展一般作为证书扩展使用，或在发给认证机构和用户的证书中使用。该项标识了 CRL，对CRL来说证书用户应包含最新的撤销信息（例如：最新的dCRL) 。
+
+======= 定义
+
+[source]
+----
+id-ce-CRL freshestCRL OBJECT IDENTIFIER ::= { id-ce 46 }
+freshestCRL   ::= {CRLDistPointsSyntax}
+----
+
+======= 说明
+
+根据证书颁发者的选择，这个扩展可能是关键的，也可能是非关键的。如果最新的CRL扩展是关 键的，那么证书使用系统不使用没有首先进行撤销和核对的最新CRL的证书。如果扩展被标记为非关 键的，证书使用系统能使用本地方法来决定是否需要检查最新的CRU。
+
+====== 个人身份标识码 IdentifyCode
+
+个人身份标识码扩展项用于表示个人身份标识的号码。
+
+======= 定义
+
+[source]
+----
+id-IdentifyCode OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.1 }
+
+IdentifyCode ::= CHOICE {
+  residenterCardNumber          [0]  PrintableString  OPTIONAL,
+  militaryOfficerCardNumber      [1]  UTF8String  OPTIONAL,
+  passportNumber                [2]  PrintableString  OPTIONAL
 }
 ----
 
-`HASH` is the hash value calculated from SM3, with a fixed bit length of
-256-bits. `CipherText` is of same length as its plaintext.
-
-=== Signature Data Format
-
-SM2 signature data format as described in ASN.1 is:
+======= 说明
 
 [source]
 ----
-SM2Signature ::= SEQUENCE{
-  R   INTEGER,  -- first portion of signature
-  S   INTEGER   -- second portion of signature
+residenterCardNumber          --身份证号码
+passportNumber                --护照号码
+militaryOfficerCardNumber     --军官证号码
+----
+
+此扩展项标记为非关键的。
+
+====== 个人社会保险号 InsuranceNumber
+
+个人社会保险号扩展项用于表示个人社会保险号码。
+
+======= 定义
+
+[source]
+----
+ID-InsuranceNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.2 }
+InsuranceNumber     ::= PrintableString
+----
+
+======= 说明
+
+此扩展项标记为非关键的。
+
+====== 企业工商注册号 ICRegistrationNumber
+
+企业工商注册号扩展项用于表示企业工商注册号码。
+
+======= 定义
+
+[source]
+----
+ID-ICRegistrationNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.3 }
+ICRegistrationNumber ::= PrintableString
+----
+
+======= 说明
+
+此扩展项标记为非关键的。
+
+====== 企业组织机构代码 OrganizationCode
+
+企业组织机构代码号扩展项用于表示企业组织机构代码。
+
+======= 定义
+
+[source]
+----
+ID-OrganizationCode OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.4 }
+OrganizationCode ::= PrintableString
+----
+
+======= 说明
+
+此扩展项标记为非关键的。
+
+====== 企业税号 TaxationNumber
+
+企业税号扩展项用于表示企业税号码。
+
+======= 定义
+
+[source]
+----
+ID-TaxationNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.5 }
+TaxationNumber    ::= PrintableString
+----
+
+======= 说明
+
+此扩展项标记为非关键的。
+
+===== 专用因特网扩展 PrivatelnternetExtensions id-pkix
+
+====== 综述
+
+本项定义了两个应用于因特网公钥基础结构（PKI)的新扩展，用于指导应用以识别一个支持CA 的在线验证服务。
+
+[source]
+----
+id-pkix OBJECT IDENTIFIER ::=
+                { iso(1)  identified-organization(3) dod(6) internet(l)
+                          security(5) mechanisms(5) pkix(7) }
+id-pe OBJECT IDENTIFIER   ::=  {  id-pkix  1  }
+----
+
+每个项是一个IA5String值的序列，每个值分别代表一个URI。URI直接确定信息的位置和格式以及获得信息的方式。
+
+====== 机构信息访问 authorityInfoAccess
+
+本项描述了包含该扩展的证书的颁发者如何访问CA的信息以及服务。包括在线验证服务和CA 策略数据。该扩展可包括在用户证书和CA证书中，且必须为非关键的。
+
+======= 定义
+
+[source]
+----
+id-pe-authorityInfoAccess OBJECT IDENTIFIER ::= { id-pe 1 }
+
+AuthorityInfoAccessSyntax ::=
+    SEQUENCE SIZE (1..MAX) OF AccessDescription
+
+AccessDescription ::= SEQUENCE {
+  accessMethod      OBJECT IDENTIFIER,
+  accessLocation    GeneralName }
+
+id-ad OBJECT IDENTIFIER           ::= { id-pkix 48 }
+id-ad-calssuers OBJECT IDENTIFIER ::= { id-ad 2 }
+id-ad-ocsp OBJECT IDENTIFIER      ::= { id-ad 1 }
+----
+
+======= 说明
+
+序列AuthorityInforAccessSyntax中的每个入口描述有关颁发含有该扩展的证书的CA附加信息格式和位置。信息的类型和格式由accessMethod字段说明；信息的位置由accessLocation字段说明。 检索机制可以由accessMethod表明或由accessLocation说明。
+
+本标准定义用于accessMethod的一个OID。当附加的信息列出了发行证书的CA高于发行该扩 展的证书 CA 时，使用 id-ad-calssuers OID。
+
+当id-ad-calssuers以accessInfoType出现时，accessLocation字段描述了获得访问协议的形式。 AccessLocation字段定义为GeneralName，它可有几种形式：当信息可以通过http、ftp或ldap获得时， accessLocation必须是一个uniformResourceIdentifier类型。当信息可以通过目录访问协议获得时， accessLocation必须是一个directoryName类型。当信息可以通过电子邮件获得时，accessLocation必 须是一个rfc822Name类型。
+
+
+====== 主体信息访问 SubjectInformationAccess
+
+本项描述了证书主体如何访问信息和服务。如果主体是CA，则包括证书验证服务和CA策略数 据，如果主体是用户，则描述了提供的服务的类型以及如何访问它们，在这种情况下，扩展域/项中的内容在所支持的服务协议的说明中定义。这个扩展项必须定义为非关键的。
+
+======= 定义
+
+
+[source]
+----
+id-pe-SubjectInformationAccess OBJECT IDENTIFIER ::= { id-pe 11 }
+
+SubjectInfo AccessSyntax ::=
+          SEQUENCE SIZE (1..MAX) OF AccessDescription
+
+AccessDescription ::= SEQUENCE {
+  accessMethod      OBJECT IDENTIFIER,
+  accessLocation    GeneralName }
+----
+
+另外附录A中规定了证书的结构，附录B中列举出标准的数字证书结构，并制定了数据项的关键 程度，附录C中列举了中国目前通用的数字证书结构供参考，附录D中提供了证书DER编码供参考。
+
+=== CRL格式
+
+==== 综述
+
+本标准采用GB/T 16262系列标准的特定编码规则（DER)对下列证书撤销列表项中的各项信息进
+行编码，组成特定的证书撤销列表数据结构。ASN.l DER编码是关于每个元素的标记、长度和值的编 码系统。
+
+=== CRL的数据结构
+
+CRL数据结构的ASN.1描述如下：
+
+[source]
+----
+CertificateList ::= SEQUENCE {
+  tbsCertList            TBSCertList,
+  signatureAlgorithm     AlgorithmIdentifier,
+  signatureValue        BIT STRING
+}
+
+TBSCertList ::= SEQUENCE {
+  version                Version OPTIONAL,
+                        --如果出现，必须是v2
+  signature              AlgorithmIdentifier,
+  issuer                Name,
+  thisUpdate            Time,
+  nextUpdate            Time OPTIONAL,
+  revokedCertificates    SEQUENCE OF SEQUENCE {
+    userCertificate        CertificateSerialNumber,
+    revocationDate        Time,
+    crlEntryExtensions     Extensions OPTIONAL
+                          --如果出现，version必须是v2
+  } OPTIONAL,
+  crlExtensions      [0] EXPLICIT Extensions OPTIONAL
+                        --如果出现，version必须是v2
 }
 ----
 
-`R` and `S` are of 256 bits long.
+上述的CRL数据结构由tbsCertList、signatureAlgorithm和signatureValue三个域构成。这些域的含义如下：
 
+* tbsCertList域包含了主体名称和颁发者名称、颁发日期、撤销的证书信息和CRL的扩展 信息。
 
-=== Enveloped Secret Key Data Format
-
-When transferring a SM2 secret key, the SM2 secret key should be encrypted. The
-encryption method is:
-
-. Create a symmetric secret key;
-
-. According to the necessary calculation methods, encrypt the SM2 private key
-  to obtain the private key's ciphertext. If the symmetric encryption method is a
-  block cipher, utilize ECB mode;
-
-. Utilize SM2 public key to encrypt the symmetric secret key to obtain
-  symmetric secret key ciphertext;
-
-. Put the SM2 private key ciphertext, symmetric secret key ciphertext into an
-  Enveloped Key Data Format.
-
-SM2 Enveloped Secret Key data format as described in ASN.1 is:
-
+* signatureAlgorithm域包含CA签发该CRL所使用的算法标识符。一个算法标识符的ASN.1结 构如下：
++
 [source]
 ----
-SM2EnvelopedKey ::=  SEQUENCE{
-  symAlgID                AlgorithmIdentifier,  -- Symmetric Encryption Algorithm ID
-  symEncryptedKey         SM2Cipher,            -- Symmetric Encryption Key encrypted by SM2 Public Key
-  Sm2PublicKey            SM2PublicKey,         -- SM2 Public Key
-  Sm2EncryptedPrivateKey  BIT STRING            -- SM2 Private Key Encrypted by Symmetric Encryption
+AlgorithmIdentifier ::= SEQUENCE {
+  algorithm     OBJECT IDENTIFIER,
+  parameters    ANY DEFINED BY algorithm OPTIONAL
 }
 ----
+算法标识符用来标识一个密码算法，其中的OBJECT IDENTIFIER部分标识了具体的算法。
+其中可选参数的内容完全依赖于所标识的算法。该域的算法标识符必须与tbsCertList中的 signature标识的签名算法项相同。如果签名算法为SM2, 无参数。
 
-== Pre-processing
+* signatureValue域包含了对tbsCertList域进行数字签名的结果。采用ASN.1 DER编码的tbsCertList作为数字签名的输入，而签名的结果则按照ASN.1编码成BIT STRING类型并保存在CRL签名值域内。如果签名算法为SM2，SM2密码算法签名数据格式参见<<GMT0009>>。
 
-=== Pre-processing 1
+==== TBSCertList及其数据结构
 
-Pre-processing 1 is to use the signing party's identifier and signature public
-key, to calculate value `Z`.
-`Z` is used in pre-processing 2, which is the SM2 key negotiation.
+TBSCertList主要包含了版本号、颁发者、生效日期、下次更新日期、签名算法、签发机构密钥标识 符、撤销的证书信息。有些TBSCertList还可以包含可选的扩展项。本条的下述段落描述这些项的语 法和语义。
 
-INPUT:
+===== 版本 version
 
-* `ID`: Byte String. User Identifier.
-* `Q`: `SM2PublicKey`. User Public Key.
+本可选项描述了编码CRL的版本号。如果使用了 Extensions项，则此项必须存在，且其值必须是 version 2(用整数1表示）。
 
-OUTPUT:
+===== 签名算法 signature
 
-* `Z`: Byte String. Output of Pre-processing 1.
+本项包含CA签发该CRL所使用的密码算法的标识符，这个算法标识符必须与CertificateList中 signatureAlgorithm项的算法标识符相同。使用国家密码管理主管部门审核批准的相关算法。
 
-Formula is:
-[source]
-----
-Z = SM3(ENTL|ID|a|b|xG|yG|xA|yA)
-----
+===== 颁发者 issuer
 
-Where:
+本项标识了签名和颁发CRL的实体。它必须包含一个非空的甄别名称(DN-distinguished name)。该项被定义为Name类型。
 
-* `ENTL` is a 2 byte field indicating bit-length of ID;
-* `ID` is the User Identifier;
-* `a`, `b` is the System Curve Parameter;
-* `xG`, `yG` are the base points;
-* `xA`, `yA` represents the User's Public Key.
+Issuer的编码规则同5.2.3.4。
 
-For detailed calculations see <<GMT0003>> and <<GMT0004>>.
+===== 生效日期 thisUpdate
 
+本项标明了 CRL的颁发日期，使用UTCTime or GeneralizedTime编码。
 
-=== Pre-processing 2
+遵循本标准的CRL颁发者在2049年之前(包括2049年)必须将该时间编码为UTCTime类型，在 2050年之后，编码为GeneralizedTime类型。
 
-Pre-processing 2 is the process of using value `Z` and the message to be signed,
-utilize SM3 to calculate hash value `H`. Hash value `H` is used for
-the calculation of SM2 digital signatures.
+UTCTime的编码规则同5.2.3.5.2。
 
-INPUT:
+GeneralizedTime 的编码规则同 5.2.3.5.3。
 
-* `Z`: Byte String. Input to Pre-processing 2.
-* `M`: Byte String. Message to be signed.
+===== 下次更新日期 nextUpdate
 
-OUTPUT:
+本项标明了下一次CRL将要发布的时间。下一次CRL可以在此时间前签发，但不能晚于此时间 签发。使用 UTCTime or GeneralizedTime 编码。
 
-* `H`: Byte String. Hash Value.
+遵循本标准的CRL颁发者必须在签发的CRL中包含nextUpdate项。
 
-Calculation:
-[source]
-----
-H = SM3(Z|M)
-----
+遵循本标准的CRL颁发者在2049年之前(包括2049年)必须将该时间编码为UTCTime类型，在 2050年之后，编码为GeneralizedTime类型。
 
-For detailed calculations see <<GMT0003>> and <<GMT0004>>.
+UTCTime的编码规则同 5.2.3.5.2。
 
+GeneralizedTime 的编码规则同 5.2.3.5.3。
 
-== Calculation Process
 
-=== Generation of Secret Key
+===== 被撤销的证书列表 Revoked Certificates
 
-SM2 secret key generation is the process of using SM2 calculations to create a
-pair of keys, this pair of keys include a private key and the corresponding
-public key. The private key is of 256-bits long and the public key 512-bits
-long.
+该域标明被撤销的证书序列号、撤销时间和撤销原因。
 
+如果没有被撤销的证书，此项不存在。否则，列出被撤销证书的序列号,并指定撤销的日期。crlEntryExtensions 在 5.3.4.7 中描述。
 
-INPUT:
+===== 扩展项 crlExtensions
 
-* None
+该域只可在version 2出现。如果出现，此项由一个或多个CRL扩展的序列组成。
 
-OUTPUT:
+crlExtensions 在 5.3.4 中描述。
 
-* `k`: `SM2PrivateKey`. SM2 Private Key.
-* `Q`: `SM2PublicKey`. SM2 Public Key.
+=== CRL扩展项及其数据结构
 
-For detailed calculations see <<GMT0003>>.
+===== 颁发机构密钥标识符 authorityKeyIdentifier
 
+颁发机构密钥标识符扩展提供了一种方式，以识别与CRL签名私钥相应的公钥。当颁发者由于有 多个密钥共存或由于发生变化而具有多个签名密钥时使用该扩展。识别可基于颁发者的主体密钥标识 符或基于颁发者的名称和序列号。
 
-=== Encryption
+===== 颁发者替换名称 issuerAltName
 
-SM2 Encryption is to use the public key of the given key pair to perform
-encryption, in order to generate ciphertext. This ciphertext can only be
-decrypted by the corresponding private key.
+本项包含一个或多个替换名称(可使用多种名称形式中的任一个），以供CRL颁发者使用。
 
-INPUT:
+===== 证书撤销列表号 crlNumber
 
-* `Q`: `SM2PublicKey`. SM2 Public Key.
-* `m`: Byte String. Plaintext To Be Encrypted.
+证书撤销列表号是一个非关键的CRL扩展，表示在给定的CRL颁发者和CRL范围内一个单调递 增序列。这个扩展可以让用户方便地确定一个特定的CRL何时取代另一个CRL。证书撤销列表号也 支持鉴别一个附件的完整CRL和增量CRL。
 
-OUTPUT:
+如果CRL颁发者在一个特定范围内除了生成完整CRL外，还生成增量CRL，完整CRL和增量 CRL必须共享同一个编号序列。如果完整CRL和增量CRL在同一时间颁发，它们必须使用相同的证 书撤销列表号，并提供相同的撤销信息。
 
-* `c`: `SM2Cipher`. Ciphertext.
+如果CRL颁发者在一个特定范围内的不同时间生成两个CRL(两个完整CRL，两个增量CRL，或 者一个完整CRL和一个增量CRL)，这两个CRL不能使用相同的证书撤销列表号。也就是说，如果两 个CRL的thisUpdate域不同,证书撤销列表号必须不同。
 
-Where:
-
-* Output `c` is in the format defined by Section 7.2;
-* Output `c`'s `XCoordinate`, `YCoordinate` are randomly generated x- and y-coordinates;
-* Output `c`'s `HASH` was calculated as `HASH = SM3( x | m | y )`, where `x`, `y` are
-  `Q`'s x- and y-coordinates;
-
-Output `c`'s CipherText is the ciphertext, its length is identical to that of
-the plaintext.
-
-For detailed calculations see <<GMT0003>> and <<GMT0004>>.
-
-
-=== Decryption
-
-SM2 Decryption means using a private key to decrypt a ciphertext encrypted by
-the corresponding public key to obtain the plaintext.
-
-INPUT:
-
-* `d`: `SM2PrivateKey`. SM2 private key.
-* `c`: `SM2Cipher`. Ciphertext.
-
-OUTPUT:
-
-* `m`: Byte String. Corresponding plaintext to ciphertext.
-
-`m` is the decrypted plaintext of `SM2Cipher`, the length of plaintext is
-the same as that of the input ciphertext `c`.
-
-For detailed calculations see <<GMT0003>>.
-
-
-=== Digital Signature
-
-SM2 signature is to obtain a signature by using the result of pre-processing
-2's together with the signer's private key through the signing process.
-
-INPUT:
-
-* `d`: `SM2PrivateKey`. Signer's Private Key.
-* `H`: Byte String. Result of Pre-processing 2.
-
-OUTPUT:
-
-* `sign`: `SM2Signature`. Signature value.
-
-For detailed calculations see <<GMT0003>>.
-
-
-=== Signature Verification
-
-SM2 signature verification is to verify a signature through using the result of
-pre-processing 2, the signature value and the signer's public key, through a
-verification process.
-
-INPUT:
-
-* `H`. Byte String. Result of Pre-processing 2
-* `sign`. `SM2Signature`. Signature value
-* `Q`. `PublicKey`. Signer's Public Key.
-
-OUTPUT:
-
-* `true` if "`validation passed`", `false` if "`validation failed`".
-
-For detailed calculations see <<GMT0003>>.
-
-
-=== Secret Key Negotiation
-
-Secret key negotiation is the negotiation process between two users for the
-setup of a shared secret key.
-
-Assume the parties of negotiation are stem:[A] and stem:[B], their secret key
-pairs are stem:[(d_A, Q_A)] and stem:[(d_B, Q_B)], both parties need to receive
-a secret key data of stem:[k l e n] bits long.
-Secret key negotiation is split into two stages.
-
-==== Stage 1: Create A Temporary Secret Key Pair
-
-User stem:[A]:
-
-* Utilize the secret key generation algorithm to create temporary key pair stem:[(r_A, R_A)],
-send stem:[R_A] and user stem:[A]'s user identifier stem:[ID_A] to user stem:[B].
-
-User stem:[B]:
-
-* Utilize the secret key generation algorithm to create temporary key pair stem:[(r_B, R_B)],
-send stem:[R_B] and user stem:[B]'s user identifier stem:[ID_B] to user stem:[A].
-
-==== Stage 2: Calculate The Shared Secret Key
-
-User stem:[A]:
-
-* INPUTS:
-
-** stem:[Q_A]: `SM2PublicKey`. User stem:[A]'s public key.
-** stem:[Q_B]: `SM2PublicKey`. User stem:[B]'s public key.
-** stem:[R_A]: `SM2PublicKey`. User stem:[A]'s temporary public key.
-** stem:[ID_A]: `OCTET STRING`. User stem:[A]'s user identifier.
-** stem:[R_B]: `SM2PublicKey`. User stem:[B]'s temporary public key.
-** stem:[ID_B]: `OCTET STRING`. User stem:[A]'s user identifier.
-** stem:[d_A]: `SM2PrivateKey`. User stem:[A]'s private key.
-** stem:[r_A]: `SM2PrivateKey`. User stem:[A]'s temporary private key.
-** stem:[k l e n]: `INTEGER`. Required bit-length of shared secret key.
-
-* OUTPUTS:
-
-** stem:[K]: `OCTET STRING`. Secret key of stem:[k l e n] bits long.
-
-* STEPS:
-
-.. Use stem:[ID_A] and stem:[Q_A] as input to pre-processing 1 to obtain stem:[Z_A];
-.. Use stem:[ID_B] and stem:[Q_B] as input to pre-processing 1 to obtain stem:[Z_B];
-.. Use stem:[k l e n], stem:[Z_A], stem:[Z_B], stem:[d_A], stem:[r_A],
-  stem:[R_A], stem:[Q_B], stem:[R_B] as input to calculate stem:[K].
-
-
-User stem:[B]:
-
-* INPUTS:
-
-** stem:[Q_B]: `SM2PublicKey`. User stem:[B]'s public key.
-** stem:[Q_A]: `SM2PublicKey`. User stem:[A]'s public key.
-** stem:[R_B]: `SM2PublicKey`. User stem:[B]'s temporary public key.
-** stem:[ID_B]: `OCTET STRING`. User stem:[A]'s user identifier.
-** stem:[R_A]: `SM2PublicKey`. User stem:[A]'s temporary public key.
-** stem:[ID_A]: `OCTET STRING`. User stem:[A]'s user identifier.
-** stem:[d_B]: `SM2PrivateKey`. User stem:[B]'s private key.
-** stem:[r_B]: `SM2PrivateKey`. User stem:[B]'s temporary private key.
-** stem:[k l e n]: `INTEGER`. Required bit-length of shared secret key.
-
-* OUTPUTS:
-
-** stem:[K]: `OCTET STRING`. Secret key of stem:[k l e n] bits long.
-
-* STEPS:
-
-.. Use stem:[ID_A] and stem:[Q_A] as input to pre-processing 1 to obtain stem:[Z_A];
-.. Use stem:[ID_B] and stem:[Q_B] as input to pre-processing 1 to obtain stem:[Z_B];
-.. Use stem:[k l e n], stem:[Z_A], stem:[Z_B], stem:[d_A], stem:[r_A],
-  stem:[R_A], stem:[Q_B], stem:[R_B] as input to calculate stem:[K].
-
-For detailed calculations see <<GMT0003>> and <<GMT0004>>.
-
-
-== Default Value For User Identifier `ID`
-
-Without pre-agreement, the user identifier `ID` should have length of 16 bytes,
-with the default value from left to right as the following
-(the ASCII hexadecimal representation of string `1234567812345678`):
+CRL号可以使用长整数。CRL验证者必须能够处理20字节的证书撤销列表号。遵循本标准的 CRL颁发者不使用大于20字节的证书撤销列表号。
 
 [source]
 ----
-0x31 0x32 0x33 0x34 0x35 0x36 0x37 0x38 0x31 0x32 0x33 0x34 0x35 0x36 0x37 0x38
+id-ce-cRLNumber OBJECT IDENTIFIER ::= { id-ce 20 }
+CRLNumber ::= INTEGER (0..MAX)
 ----
+
+===== 增量证书撤销列表指示 Delta CRL Indicator
+
+增量证书撤销列表指示是一个关键CRL扩展，表明一个CRL是增量CRL。增量CRL包含上次发布之后的撤销信息，而不是将所有的撤销信息包含在一个完整CRL里。在一些环境里使用增量 CRL可以显著减少网络流量和处理时间。
+
+增量证书撤销列表指示扩展包含一个类型为BaseCRLNumber的单一值。证书撤销列表号标识了 此增量CRL使用的起始CRL。遵循本标准的CRL颁发者必须将参考基准CRL颁发为完整CRL。增 量CRL包含所有的更新撤销状态。增量CRL和参考基准CRL的组合与完整CRL是等效的。
+
+当遵循本标准的CRL颁发者生成增量CRL，此增量CRL必须包含一个关键的增量证书撤销列表 指示扩展项。
+
+[source]
+----
+id-ce-deltaCRLIndicator OBJECT IDENTIFIER ::= { id-ce 27 }
+BaseCRLNumber ::= CRLNumber
+----
+
+===== 颁发分发点 Issuing Distribution Point
+
+颁发分发点是一个关键CRL扩展，表明一个特定CRL的分发点和范围，还表明这个CRL是否只 包含了用户证书的撤销、CA证书的撤销或者一系列的原因代码。
+
+[source]
+----
+id-ce-issuingDistributionPoint OBJECT IDENTIFIER ::= { id-ce 28 }
+IssuingDistributionPoint  ::= SEQUENCE {
+  distributionPoint              [0] DistributionPointName OPTIONAL,
+  onlyContainsUserCerts          [1] BOOLEAN DEFAULT FALSE,
+  onlyContainsCACerts            [2] BOOLEAN DEFAULT FALSE,
+  onlySomeReasons                [3] ReasonFlags OPTIONAL,
+  indirectCRL                    [4] BOOLEAN DEFAULT FALSE,
+  onlyContainsAttributeCerts     [5] BOOLEAN DEFAULT FALSE }
+----
+
+===== 最新证书撤销列表 Freshest CRL
+
+最新证书撤销列表扩展项表明完整CRL的增量CRL信息如何获取。遵循本标准的CRL颁发者必
+
+须将此项标记成非关键。此项不在增量CRL中出现。
+
+最新证书撤销列表扩展项的格式和数字证书的cRLDistributionPoints扩展项相同。参考5. 2. 4.  2.15。但是，该最新证书撤销列表扩展项中分发点域是有意义的；同时Reasons和cRLIssuer域必须略去。
+
+[source]
+----
+id-ce-freshestCRL OBJECT IDENTIFIER ::=  { id-ce 46 }
+FreshestCRL ::= CRLDistributionPoints
+----
+
+===== 证书撤销列表条目 CRL Entry
+
+====== 原因代码 Reason Code
+
+原因代码为非关键扩展，表明证书撤销的原因。
+
+代码removeFromCRL (8)只用于增量CRL。其他代码可以用于任意CRL。
+
+[source]
+----
+id-ce-cRLReasons OBJECT IDENTIFIER ::= { id-ce 21 }
+
+--reasonCode ::= { CRLReason }
+
+CRLReason ::= ENUMERATED {
+  unspecified           (0),
+  keyCompromise          (1),
+  cACompromise          (2),
+  affiliationChanged    (3),
+  superseded            (4),
+  cessationOfOperation  (5),
+  certificateHold        (6),
+    -- 7不使用
+  removeFromCRL         (8),
+  privilegeWithdrawn    (9),
+  aACompromise          (10) }
+----
+
+====== 撤销时间 Invalidity Date
+
+撤销时间是个非关键扩展，表明知道或怀疑私钥泄露或证书失效的时间。
+
+该域包含的GeneralizedTime必须使用格林威治标准时间，必须按照5.2.3.5.3的要求表示。
+
+[source]
+----
+id-ce-invalidityDate OBJECT IDENTIFIER ::= { id-ce 24 }
+InvalidityDate ::= GeneralizedTime
+----
+
+====== 证书颁发者 Certificate Issuer
+
+如果存在，证书颁发者扩展包含一个或多个和CRL条目对应的，从证书的颁发者域和/或颁发者替换名称域得到的名字。
+
+[source]
+----
+id-ce-certificateIssuer OBJECT IDENTIFIER ::= { id-ce 29 }
+CertificateIssuer ::= GeneralNames
+----
+
+
+
+[appendix,obligation="normative"]
+== 证书的结构
+
+=== 证书构成（见<<table-a1>>)
+
+[[table-a1]]
+.证书结构
+[cols="1a"]
+|===
+
+|基本证书域（TBSCertificate)
+|签名算法域（signatureAlgorithm)
+|签名值域（signature Value)
+
+|===
+
+=== 基本证书域（见<<table-a2>>)
+
+表A. 2基本证书域结构
+
+
+[[table-a2]]
+.基本证书域结构
+[cols="1a,1a,2a"]
+|===
+|名称
+|描述
+|说明
+
+|version  |版本号
+|serialNumber  |序列号
+|signature  |签名算法
+|issuer  |颁发者
+|validity  |有效日期
+|subject  |主体
+|subjectPublicKeyInfo  |主体公钥信息
+|issuerUniqueID  |颁发者唯一标识符  本标准中不使用
+|subjectUniqueID  |主体唯一标识符  本标准中不使用
+|extensions  |扩展项按本标准的扩展项进行定义，参考<<appendix-a3>>
+
+|===
+
+[[appendix-a3]]
+=== 标准的扩展域（见表<<table-a3>>)
+
+[[table-a3]]
+.标准的扩展域结构
+[cols="1a,1a,2a"]
+|===
+|名称
+|描述
+|关键度
+
+|authorityKeyIdentifier  |机构密钥标识符  |非关键
+|subjectKeyIdentifier  |主体密钥标识符  |非关键
+|keyUsage  |密钥用法  |双证书标记为关键，单证书标记为非关键
+|extKeyUsage  |扩展密钥用途  |如果密钥的用法只限于所指示的用途时标记为关键，否则标记为非关键
+
+|privateKeyUsagePeriod  | 私有密钥使用期  |非关键
+|certificatePolicies  | 证书策略  |非关键
+|policyMappings  | 策略映射  |如果证书用户需要正确解释发布的CA设定的规则时标识为关键，否则标识为非关键
+|subjectAltName  | 主体替换名称  |非关键
+|issuerAltName  | 颁发者替换名称  |非关键
+|subjectDirectoryAttributes  | 主体目录属性  |非关键
+|basicConstraints  | 基本限制  |CA证书标记为关键，终端实体证书标记为非关键
+|nameConstraints  | 名称限制  |如果证书用户系统应检验所处理的认证路径与此扩展中的值是否一致时标记为关键，否则标记为非关键
+|policyConstraints  | 策略限制  |如果证书用户需要正确地解释认证机构CA设定的规则时标识为关键，否则标识为非关键
+|CRLDistributionPoints  | CRL 分发点  |非关键
+|inhibitAnyPolicy  | 限制所有策略  |如果证书用户需要正确地解释认证机构CA设定的规则时标识为关键，否则标识为非关键
+|freshestCRL  | 最新的CRL  |非关键
+|id-pkix  |私有的Internet扩展  |非关键
+|authorityInfoAccess  |机构信息访问  |非关键
+|SubjectInformationAccess  |主体信息访问  |非关键
+|IdentityCardNumber  |个人身份证号码  |非关键
+|InsuranceNumber  |个人社会保险号  |非关键
+|ICRegistrationNumber  |企业工商注册号  |非关键
+|OrganizationCode  |企业组织机构代码  |非关键
+|TaxationNumber  |企业税号  |非关键
+
+|===
+
+
+[appendix,obligation="normative"]
+== 证书的结构实例
+
+=== 用户证书的结构实例（见表<<table-b1>>）
+
+[[table-b1]]
+.用户证书结构
+[cols="1a,2a"]
+|===
+
+2+|版本号 (version)
+2+|证书序列号 (serialNumber)
+2+|签名算法标识符 (signature)
+2+|颁发者名称 (issuer)
+
+.2+|有效期 (validity)
+| 起始有效期
+|  终止有效期
+
+.6+|主体名称 (subject)
+| 国家 (countryName)
+| 省份 (stateOrProvinceName)
+| 地市 (localityName)
+| 组织名称 (organizationName)
+| 机构名称 (organizationUnitName)
+// TODO: This used to be "CommanName", should be CommonName
+| 用户名称 (CommonName)
+
+2+|主体公钥信息 (subjectPublicKeyInfo)
+2+|颁发机构的密钥标识 (authorityKeyIdentifier)
+2+|主体密钥标识符 (subjectKeyIdentifier)
+2+|CRL分发点 (CRLDistributionPoints)
+
+|===
+
+=== 服务器证书的结构实例（见表<<table-b2>>）
+
+[[table-b2]]
+.服务器证书结构
+[cols="1a,2a"]
+|===
+
+2+|版本号 (version)
+2+|证书序列号 (serialNumber)
+2+|签名算法标识符 (signature)
+2+|颁发者名称 (issuer)
+
+.2+|有效期 (validity)
+| 起始有效期
+|  终止有效期
+
+.6+|主体名称 (subject)
+| 国家 (countryName)
+| 省份 (stateOrProvinceName)
+| 地市 (localityName)
+| 组织名称 (organizationName)
+| 机构名称 (organizationUnitName)
+// TODO: This used to be "CommanName", should be CommonName
+| 服务器名称 (CommonName)
+
+2+|主体公钥信息 (subjectPublicKeyInfo)
+2+|颁发机构的密钥标识 (authorityKeyIdentifier)
+2+|主体密钥标识符 (subjectKeyIdentifier)
+2+|CRL分发点 (CRLDistributionPoints)
+
+|===
+
+
+
+[appendix,obligation="normative"]
+== 证书内容表
+
+本节包含一系列证书内容表。每一个表列出了一个特别类型证书或证书撤销列表的证书内容。在 PKI体系中将被广泛支持的可选特征也被识别，这些属性将包含在签发者属性中。在实际应用中，证书和证书撤销列表中可能还会包括局部应用中非严格扩展等其他信息，但是通用的PKI客户端将不会去处理这些额外信息。另外，对于未列在工作表中的关键扩展，不允许在中国的PKI证书或证书撤销列表内容中使用。
+
+以下证书内容表是：
+
+. 自签名CA证书内容表，即根证书内容工作表，它定义自我签名证书强制和可选的内容。当确 认一个信任根时，PKI体系中的CA发布自签名证书。
+
+. 二级CA证书内容表，它定义了二级CA证书的强制和可选内容。
+
+. 终端实体签名证书内容表，它定义了由PKI体系中CA颁发的实体签名证书的强制和可选内 容，其对象是一个终端实体，其私钥用于签名，其公钥将用来验证签名，该证书的密钥对签发时在客户端生成，为用户所私有，其私钥在终端介质中应该不可导出。
+
+. 终端实体加密证书内容表，它定义了由PKI体系中CA颁发的实体加密证书的强制和可选内 容。其公钥用于加密数据，私钥用于解密数据。密钥由密钥管理中心（KM)分发，其生命周期 受密钥管理中心控制，在证书有效期间，在介质损坏的情况下，可以通过正常的流程通过CA 中心进行恢复。
+
+. 证书撤销列表内容表，它定义了由证书撤销列表签发者发布的证书撤销列表的强制和可选内容。
+
+对于终端实体签名证书和加密证书，它们应该总是成对出现，其生命周期由CA中心进行管理。对于双用途终端实体证书（即既用作签名，又用于加密的单张终端实体证书），由于其安全和可管理性存在问题，因此不建议使用。
+
+
+=== 自签名CA证书内容表（见表<<table-c1>>）
+
+[[table-c1]]
+.基本证书域结构
+[cols="3a,1a,2a,3a"]
+|===
+|域
+|关键项
+|标识值
+|描述
+
+|Certificate  |||
+|signature    |||
+|AlgorithmIdentifier ||| 必须与signatureAlgorithm域匹配
+
+.4+|algorithm
+.4+|
+2+|选择下列算法
+|1.2.840.113549.1.1.5   |sha-1WithRSAEncryption
+|1.2.840.113549.1.1.11  |sha256WithRSAEncryption
+|1.2.156.10197.1.501    |SM3WithSM2Encryption
+
+|parameters  ||  NULL  |当为SM2密码算法时，此项不需要。
+|tbsCertificate |||  待签名内容
+
+|version ||  2 |整数2用于版本3证书
+|serialNumber  | |INTEGER  |唯一正整数参考5.2.3.2
+|issuer |||
+|Name  |||    必须与主体DN一致
+|RDNSequence |||
+| RelativeDistinguishedName |||
+|AttributeTypeAndValue  |||
+|AttributeType    ||  OID |
+|AttributeValue    ||| 参考 5.2.3.4
+|validity |||
+|NotBefore |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime    ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|NotAfter |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime  ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|subject  |||
+|Name    |||  必须与主题DN一致
+|RDNSequence  |||
+|RelativeDistinguishedName  |||
+|AttributeTypeAndValue  |||
+|AttributeType  ||  OID |
+|AttributeValue  ||| 参考 5.2.3.4
+|subjectPublicKeyInfo  |||
+|algorithm |||
+|AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
+.2+|algorithm
+.2+|
+|1.2.840.113549.1.1.1 |RSA
+|1.2.156.10197.1.301  |SM2椭圆曲线公钥密码算法
+
+.2+|parameters
+.2+|
+|NULL |RSA
+|ECPublicKeySpec  |当使用SM2密码算法时，为SM2密码算法曲线的OID
+
+|subjectPublicKey  | |BIT STRING  |对RSA算法，模长至少应该是2 048位， 对SM2箅法，公钥至少256位
+
+4+|必须的扩展
+|subjectKeyIdentifier  |FALSE  ||主体密钥标识符，用于证书路径查询
+|KeyIdentifier  ||OCTET字符串  |公钥值的SHA-1哈希算法摘要
+|subjectInfoAccess  |FALSE  | |对象信息存储包括一系列访问方法。 只有一种存储方法被定义为CA证书中
+|AccessDescription |||
+|accessMethod  ||id-ad-caRepository (1. 3. 6.1.5. 5. 7. 48.5)
+|自签名证书至少要包括存储方法一个实例，这种存储方法包括URI名字形成LDAP访问目录服务器的指定位置。证书也可包括URI名字形成 指定HTTP访问WEB服务器。每一个URI应指向CA证书的位置
+
+|accessLocation |||
+|GeneralName |||
+|uniformResourceIdentifier  ||| 采用 "`ldap://`" 或者 "`http://`" 形式
+|basicConstraints  | TRUE ||
+|cA    |TRUE ||
+|KeyUsage  |TRUE ||
+|数字签名 digitalSignature    ||    0 |
+|防抵赖 nonRepudiation    ||    0 |
+|密钥加密 keyEncipherment   ||    0 |
+|数据加密 dataEncipherment    ||    0 |
+|密钥协议key Agreement    ||    0 |
+|证书签发KeyCertSign    ||    1 |
+|黑名单签名CRLSign    ||    1 |
+|仅加密 encipherOnly    ||    0 |
+|仅解密 decipherOnly    ||    0 |
+
+4+|可选扩展
+|issuerAltName  |False  | |任何名字类型都可以，但只有最通用的名称才在这里加入
+|GeneralNames |||
+|GeneralName |||
+|rfc822Name  ||IA5String  |PKI管理机构的电子邮件地址
+
+|===
+
+=== 下级CA证书内容表（见<<table-c2>>)
+
+[[table-c2]]
+.下级CA证书内容表
+[cols="3a,1a,2a,3a"]
+|===
+|域
+|关键项
+|标识值
+|描述
+
+|Certificate  |||
+|signature    |||
+|AlgorithmIdentifier ||| 必须与signatureAlgorithm域匹配
+
+.4+|algorithm
+.4+|
+2+|选择下列算法
+|1.2.840.113549.1.1.5   |sha-1WithRSAEncryption
+|1.2.840.113549.1.1.11  |sha256WithRSAEncryption
+|1.2.156.10197.1.501    |SM3WithSM2Encryption
+
+|parameters  ||  NULL  |当为SM2密码算法时，此项不需要。
+|tbsCertificate |||  待签名内容
+
+|version ||  2 |整数2用于版本3证书
+|serialNumber  | |INTEGER  |唯一正整数
+|issuer |||
+|Name  |||    必须与发行者主体DN一致
+|RDNSequence |||
+|RelativeDistinguishedName |||
+|AttributeTypeAndValue  |||
+|AttributeType    ||  OID |
+|AttributeValue    ||| 参考 5.2.3.4
+|validity |||
+|NotBefore |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime    ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|NotAfter |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime  ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|subject  |||
+|Name    |||
+|RDNSequence  |||
+|RelativeDistinguishedName  |||
+|AttributeTypeAndValue  |||
+|AttributeType  ||  OID |
+|AttributeValue  ||| 参考 5.2.3.4
+|subjectPublicKeyInfo  |||
+|algorithm |||
+|AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
+.2+|algorithm
+.2+|
+|1.2.840.113549.1.1.1 |RSA
+|1.2.156.10197.1.301  |SM2椭圆曲线公钥密码算法
+
+.2+|parameters
+.2+|
+|NULL |RSA
+|ECPublicKeySpec  |SM2密码算法曲线的OID
+
+|subjectPublicKey  | |BIT STRING  |对RSA算法，模长至少应该是2048位， 对SM2箅法，公钥至少256位
+
+4+|必须的扩展
+|authorityKeyIdentifier  |FALSE  ||签发者密钥标识符
+|KeyIdentifier  ||OCTET字符串  |签发者公钥值得SHA-1摘要值
+|subjectKeyIdentifier  |FALSE  ||主题密钥标识符用于证书路径查询
+|KeyIdentifier  ||OCTET字符串  |公钥值的SHA-1哈希算法摘要
+|basicConstraints  | TRUE ||
+|cA    |TRUE ||
+|KeyUsage  |TRUE ||
+|数字签名 digitalSignature    ||    0 |
+|防抵赖 nonRepudiation    ||    0 |
+|密钥加密 keyEncipherment   ||    0 |
+|数据加密 dataEncipherment    ||    0 |
+|密钥协议key Agreement    ||    0 |
+|证书签发KeyCertSign    ||    1 |
+|黑名单签名CRLSign    ||    1 |
+|仅加密 encipherOnly    ||    0 |
+|仅解密 decipherOnly    ||    (original is empty, or is it 0?) |
+
+|certificatePolicies |||
+|PolicyInformation |||
+|policyIdentifier  | |OID  |The inclusion of policy qualifiers is discouraged
+|CRLDistributionPoints |||
+|DistributionPoint |||
+|distributionPoint |||
+|DistributionPointName |||
+|fullName |||
+|GeneralNames |||
+|GeneralName |||
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType  ||OID |
+|AttributeValue |||
+|uniformResourceIdentifier    ||| 采用 "`ldap://`" 或者 "`http://`" 形式
+|authorityInfoAccess  |FALSE ||
+|AccessDescription  || |  访问方法一
+|accessMethod  | |id-ad-calssuers (1.3.6.1.5.5.7.48.2) |
+|accessLocation |||
+|GeneralName |||
+|uniformResourceIdentifier  |||    采用 "`ldap://`" 或者 "`http://`" 形式
+|AccessDescription    ||| 访问方法二
+|accessMethod    ||id-ad-ocsp (1.3.6.1.5.5.7.48.1) |
+|accessLocation |||
+|GeneralName |||
+
+|uniformResourceIdentifier  ||| 釆用"`ldap: //`"或者"`http: //`"形式
+|subjectInfoAccess  |FALSE ||对象信息存储包括一系列访问方法，只有一种存储方法被定义为CA证书中
+|AccessDescription |||
+|accessMethod  || id-ad-caRepository (1.3.6.1.5.5.7.48.5)
+|自签名证书至少要包括存储方法一 个实例，这种存储方法包括URI名字 形成LDAP访问目录服务器的指定 位置。证书也可包括URI名字形成 指定HTTP访问WEB服务器。每一个URI应指向CA证书的位置
+
+|accessLocation |||
+|GeneralName |||
+|uniformResourceIdentifier  |||  釆用"`Map: //`"或者"`http: //`"形式
+
+4+|可选扩展
+|issuerAltName  |FALSE || 任何名字类型都可以，但只有最通用的名称才在这里加人
+|GeneralNames |||
+|GeneralName  |||
+|rfc822Name || IA5String  |PKI管理机构的电子邮件地址
+|FreshestCRL  |FALSE |  |使用增量黑名单方式才有此扩展
+|DistributionPoint  |||
+|distributionPoint  |||
+|DistributionPointName  |||
+|fullName |||
+|GeneralNames |||
+|GeneralName  |||
+|directoryName  |||
+|Name |||
+|RDNSequence  |||
+|RelativeDistinguished  |||
+|AttributeTypeAndV  |||
+|AttributeType  ||OID |
+|AttributeValue |||
+|uniformResourceIdentifier ||| 采用 "`ldap: //`" 或者 "`http: //`" 形式
+
+|===
+
+
+
+=== 终端实体签名证书内容表（见<<table-c3>>)
+
+[[table-c3]]
+.终端实体签名证书内容表
+[cols="3a,1a,2a,3a"]
+|===
+|域
+|关键项
+|标识值
+|描述
+
+|Certificate  |||
+|signature    |||
+|AlgorithmIdentifier ||| 必须与signatureAlgorithm域匹配
+
+.4+|algorithm
+.4+|
+2+|选择下列算法
+|1.2.840.113549.1.1.5   |sha-1WithRSAEncryption
+|1.2.840.113549.1.1.11  |sha256WithRSAEncryption
+|1.2.156.10197.1.501    |SM3WithSM2Encryption
+
+|parameters  ||  NULL  |
+|tbsCertificate |||  待签名内容
+
+|version ||  2 |整数2用于版本3证书
+|serialNumber  | |INTEGER  |唯一正整数
+|issuer |||
+|Name  |||    必须与发行者主体DN一致
+|RDNSequence |||
+|RelativeDistinguishedName |||
+|AttributeTypeAndValue  |||
+|AttributeType    ||  OID |
+|AttributeValue    ||| 参考 5.2.3.4
+|validity |||
+|NotBefore |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime    ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|NotAfter |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime  ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|subject  |||
+|Name    |||  必须与主题DN一致
+|RDNSequence  |||
+|RelativeDistinguishedName  |||
+|AttributeTypeAndValue  |||
+|AttributeType  ||  OID |
+|AttributeValue  ||| 参考 5.2.3.4
+|subjectPublicKeyInfo  |||
+|algorithm |||
+|AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
+.2+|algorithm
+.2+|
+|1.2.840.113549.1.1.1 |RSA
+|1.2.156.10197.1.301  |SM2椭圆曲线公钥密码算法
+
+.2+|parameters
+.2+|
+|NULL |RSA
+|ECPublicKeySpec  |SM2算法曲线的OID
+
+|subjectPublicKey  | |BIT STRING  |对RSA算法，模长至少应该是2 048位，对SM2箅法，公钥至少256位
+
+4+|必须的扩展
+|authorityKeyIdentifier  |FALSE  ||签发者密钥标识符
+|keyIdentifier  ||OCTET字符串  |签发者公钥值得SHA-1哈希算法摘要
+|subjectKeyIdentifier  |FALSE  ||主体密钥标识符，用于证书路径査询
+|keyIdentifier  ||OCTET字符串  |公钥值的SHA-1哈希算法摘要
+|KeyUsage  |TRUE ||
+|数字签名 digitalSignature    ||    1 |
+|防抵赖 nonRepudiation    ||    1 |
+|密钥加密 keyEncipherment   ||    0 |
+|数据加密 dataEncipherment    ||    0 |
+|密钥协议key Agreement    ||    0 |
+|证书签发KeyCertSign    ||    0 |
+|黑名单签名CRLSign    ||    0 |
+|仅加密 encipherOnly    ||  0 |
+|仅解密 decipherOnly    ||    (original is empty, or is it 0?) |
+
+|certificatePolicies  |  FALSE ||
+|PolicyInformation  |||
+|policyIdentifier ||OID  |The inclusion of policy qualifiers is discouraged
+|CRLDistributionPoints  |||
+|DistributionPoint  |||
+
+|distributionPoint |||
+|DistributionPointName |||
+|fullName |||
+|GeneralNames |||
+|GeneralName |||
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType    |OID ||
+|AttributeValue |||
+|uniformResourceIdentifier   ||| 釆用 "`ldap://`" 或者 "`http://`" 形式
+|authorityInfoAccess  |FALSE ||
+|AccessDescription  ||| 访问方法一
+|accessMethod  || id-ad-calssuers (1.3.6.1.5.5.7.48.2) |
+|accessLocation |||
+|GeneralName |||
+|uniformResourceIdentifier  |||采用 "`ldap://`" 或者 "`http://`" 形式
+|AccessDescription  |||访问方法二
+|accessMethod  || id-ad-ocsp (1.3.6.1.5.5.7.48.1) |
+|accessLocation |||
+|GeneralName |||
+|uniformResourceIdentifier  ||| 采用 "`ldap://`" 或者 "`http://`" 形式
+
+4+|可选扩展
+|extKeyUsage  |BOOLEAN  || 扩展密钥用法
+|KeyPurposeId  ||OID |
+|issuerAltName |FALSE || 任何名字类型都可以，但只有最通用的名称才在这里加人
+
+|GeneralNames |||
+|GeneralName |||
+|rfc822Name  ||IA5String  |PKI管理机构的电子邮件地址
+|subjectAltName  |FALSE ||
+|GeneralNames |||
+|GeneralName |||
+|rfc822Name  ||IA5String |
+|dNSName    ||IA5String |
+|iPAddress  ||IA5String |
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType   || OID |
+|AttributeValue  |||
+|FreshestCRL |FALSE || 使用增量黑名单方式才有此扩展
+|DistributionPoint  |||
+|distributionPoint |||
+|DistributionPointName |||
+|fullName |||
+|GeneralNames |||
+|GeneralName |||
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType  ||OID |
+|AttributeValue |||
+|uniformResourceIdentifier  ||| 采用 "`ldap: //`" 或者 "`http: //`" 形式
+
+|===
+
+
+=== 终端实体加密证书内容表 (见<<table-c4>>)
+
+[[table-c4]]
+.终端实体加密证书内容表
+[cols="3a,1a,2a,3a"]
+|===
+|域
+|关键项
+|标识值
+|描述
+
+|Certificate  |||
+|signature    |||
+|AlgorithmIdentifier ||| 必须与signatureAlgorithm域匹配
+
+.4+|algorithm
+.4+|
+2+|选择下列算法
+|1.2.840.113549.1.1.5   |sha-1WithRSAEncryption
+|1.2.840.113549.1.1.11  |sha256WithRSAEncryption
+|1.2.156.10197.1.501    |SM3WithSM2Encryption
+
+|parameters  ||  NULL  |
+|tbsCertificate |||  待签名内容
+
+|version ||  2 |整数2用于版本3证书
+|serialNumber  | |INTEGER  |唯一正整数
+|issuer |||
+|Name  |||    必须与发行者主体DN一致
+|RDNSequence |||
+|RelativeDistinguishedName |||
+|AttributeTypeAndValue  |||
+|AttributeType    ||  OID |
+|AttributeValue    ||| 参考 5.2.3.4
+|validity |||
+|NotBefore |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime    ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|NotAfter |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime  ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+|subject  |||
+|Name    |||
+|RDNSequence  |||
+|RelativeDistinguishedName  |||
+|AttributeTypeAndValue  |||
+|AttributeType  ||  OID |
+|AttributeValue  ||| 参考 5.2.3.4
+|subjectPublicKeyInfo  |||
+|algorithm |||
+|AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
+.2+|algorithm
+.2+|
+|1.2.840.113549.1.1.1 |RSA
+|1.2.156.10197.1.301  |SM2椭圆曲线公钥密码算法
+
+.2+|parameters
+.2+|
+|NULL |RSA
+|ECPublicKeySpec  |SM2算法曲线的OID
+
+|subjectPublicKey  | |BIT STRING  |对RSA算法，模长至少应该是2 048位，对SM2箅法，公钥至少256位
+
+4+|必须的扩展
+
+|authorityKeyIdentifier  |FALSE  ||  签发者密钥标识符
+|KeyIdentifier  ||  OCTET字符串  |签发者公钥值的SHA-1哈希算法摘要
+|subjectKeyIdentifier  |FALSE    ||主题密钥标识符，用于证书路径査询
+|KeyIdentifier  ||  OCTET字符串  |公钥值的SHA-1哈希算法摘要
+|KeyUsage  |TRUE ||
+|数字签名 digitalSignature  ||  0 |
+|防抵赖 nonRepudiation    ||0 |
+|密钥加密 keyEncipherment    ||1|
+|数据加密 dataEncipherment    ||1|
+|密钥协议keyAgreement    ||1 |
+|证书签发KeyCertSign  ||  0 |
+|黑名单签名CRLSign  ||  0 |
+|仅加密 encipherOnly  ||  0 |
+|仅解密 decipherOnly  ||  0 |
+|certificatePolicies  |FALSE ||
+|PolicyInformation |||
+||policyIdentifier  ||  OID  |The inclusion of policy qualifiers is discouraged
+|CRLDistributionPoints||
+
+|DistributionPoint |||
+|distributionPoint |||
+|DistributionPointName |||
+|fullName |||
+|GeneralNames |||
+|GeneralName |||
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType    ||OID |
+|AttributeValue |||
+|uniformResourceIdentifier  |||  采用 "`ldap://`" 或者 "`http://`" 形式
+|authorityInfoAccess  |FALSE ||
+|AccessDescription  ||| 访问方法一
+|accessMethod  || id-ad-calssuers (1.3.6.1.5.5.7.48.2) |
+|accessLocation  |||
+|GeneralName |||
+|uniformResourceIdentifier   |||    采用 "`ldap://`" 或者 "`http://`" 形式
+|AccessDescription   |||    访问方法二
+|accessMethod  || id-ad-ocsp (1.3.6.1.5.5.7.48.1) |
+|accessLocation  |||
+|GeneralName |||
+|uniformResourceIdentifier   |||采用 "`ldap://`" 或者 "`http://`" 形式
+4+|可选扩展
+|extKeyUsage  |BOOLEAN ||  扩展密钥用法
+|KeyPurposeId  ||OID |
+|issuerAltName  |FALSE  ||任何名字类型都可以，但只有最通用的名称才在这里加入
+
+|GeneralNames |||
+|GeneralName |||
+|r£c822Name    ||IA5String |PKI管理机构的电子邮件地址
+|subjectAltName  |FALSE ||
+|GeneralNames |||
+|GeneralName |||
+|rfc822Name  ||IA5String |
+|dnsName    ||IA5String |
+|ipAddress  ||IA5String |
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType  ||OID |
+|AttributeValue |
+|FreshestCRL  |FALSE ||  使用增量黑名单方式才有此扩展
+|DistributionPoint |||
+|distributionPoint |||
+|DistributionPointName |||
+|fullName |||
+|GeneralNames |||
+|GeneralName |||
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType    || OID |
+|AttributeValue |||
+|uniformResourceIdentifier   |||采用 "`ldap://`" 或者 "`http://`" 形式
+
+|===
+
+=== 证书撤销列表内容表（见表<<table-c5>>)
+
+[[table-c5]]
+.证书撤销列表内容表
+|===
+
+[cols="3a,1a,2a,3a"]
+|===
+|域
+|关键项
+|标识值
+|描述
+
+|CertificateList  |||
+|signature    |||
+|AlgorithmIdentifier ||| 必须与signatureAlgorithm域匹配
+
+.4+|algorithm
+.4+|
+2+|选择下列算法
+|1.2.840.113549.1.1.5   |sha-1WithRSAEncryption
+|1.2.840.113549.1.1.11  |sha256WithRSAEncryption
+|1.2.156.10197.1.501    |SM3WithSM2Encryption
+
+|parameters  ||  NULL  |
+|tbsCertList |||  待签名内容
+
+|version ||  2 |版本2(整数1)
+|issuer |||
+|Name  |||    必须与发行者主题DN一致
+|RDNSequence |||
+|RelativeDistinguishedName |||
+|AttributeTypeAndValue  |||
+|AttributeType    ||  OID |
+|AttributeValue    ||| 参考 5.2.3.4
+
+|thisUpdate |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime    ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+
+|nextUpdate |||
+|Time |||
+|UtcTime    ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime  ||YYYYMMDDHHMMSSZ  |用于2049之后的年份
+
+|revokedCertificates  |||
+|userCertificate ||  INTEGER | 被撤销证书的序列号
+|revocationDate |||
+|Time |||
+|UtcTime  ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
+|generalTime  ||YYYYMMDDHHMMSSZ |用于2049之后的年份
+
+|crlEntryExtensions
+|Extensions
+|reasonCode  |FALSE  ||如果需要提供废除原因，请使用该扩展
+|CRLReason  ||| 主要使用的原因包括:keyCompromise 密钥泄露，CACompromise CA泄露， affiliationChanged, superseded 或 cessationOfOperation。如果废除原因未知，则此扩展项不要增加。 removeFromCRL只能用于增量CRL 中，关于证书冻结certificateHold建议不要使用
+
+|invalidityDate  |FALSE ||
+|GeneralizedTime  ||YYYYMMDDHHMMSSZ |
+|certificateIssuer  |FALSE ||
+|GeneralNames |||
+|GeneralName |||
+|rfc822Name  || IA5String  |PKI管理机构的电子邮件地址
+|crlExtensions |||
+|Extensions |||
+|authorityKeyIdentifier  |FALSE ||  签发者密钥标识符
+|KeyIdentifier  ||OCTET字符串  |签发者公钥值的SHA-1哈希算法 摘要
+|issuerAltName  |FALSE ||任何名字类型都可以，但只有最通用 的名称才在这里加入
+|GeneralNames |||
+|GeneralName |||
+|rfc822Name  ||IA5String  |PKI管理机构的电子邮件地址
+|CRLNumber  |FALSE  |INTEGER  |单调递增序列，所有的CRL都应该包含这一项
+|issuingDistributionPoint  |TRUE |OCTET字符串  |本项出现在分块CRL中，如果CRL覆盖所有发行者签发的证书，则不需要包含此项。规范不建议使用间接 CRL或不能覆盖所有原因码的CRL
+|distributionPoint  |||
+|DistributionPointName  || |使用在分块CRL中，必须与证书中的发布点扩展值一致
+|fullName  |||
+|GeneralNames |||
+|GeneralName |||
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType   ||OID |
+|Attribute Value |||
+|uniformResourceIdentifier  ||IA5String  |采用 "`ldap://`" 或者 "`http://`" 形式
+|onlyContainsUserCerts  ||BOOLEAN  |如果设置为真，则本CRL只覆盖实体证书。（注意：如果本值为真，同时覆 盖了所有实体证书，则 distributionPoint 可以忽略）
+|onlyContainsCACerts    ||BOOLEAN  |如果设置为真，则本CRL只覆盖CA 证书。（注意：如果本值为真，同时覆 盖了所有 CA 证书，则 distributionPoint 可以忽略）
+|IndirectCRL  |FALSE  ||本标准不推荐使用间接CRL,如果本CRL包含了非本CRL发行者所颁发的证书,这一项必须设置为真
+|FreshestCRL  |FALSE  ||在启用增量方式时，包含此项
+|DistributionPoint |||
+|distributionPoint |||
+|DistributionPointName |||
+|fullName |||
+|GeneralNames |||
+|GeneralName |||
+|directoryName |||
+|Name |||
+|RDNSequence |||
+|RelativeDistinguished |||
+|AttributeTypeAndV |||
+|AttributeType  ||OID |
+|AttributeValue |||
+|uniformResourceIdentifier   |||  采用 "`ldap://`" 或者 "`http://`" 形式
+|deltaCRLIndicator  |TRUE  ||本扩展项只出现在增量CRL中
+|BaseCRLNumber  ||INTEGER  |指向基CRL
+
+|===
+
+
+[appendix,obligation=informative]
+== 数字证书编码举例
+
+=== RSA数字证书编码
+
+以下内容将以X.509版本3证书为例，证书包含下列信息：
+
+[loweralpha]
+. the serial number is 6565422187515605500000000000000000000;
+. the certificate is signed with RSA and the sha1 hash algorithm;
+. the issuer's distinguished name is CN = Certificate Center； C=CN;
+. and the subject's distinguished name is CN=用户名字；OU =部门名称；O =组织名称；S== 省份名称；C=CN;
+. the certificate was issued on August 7, 2003 and expired on August 6, 2004;
+. the certificate contains a 1024-bit RSA public key;
+. the certificate is an end entity certificate (not a CA certificate);
+. the certificate includes an alternative subject name, is URL;
+. the certificate includes an authority key identifier, subject KeyIdentifier and basic constraints extensions;
+. the certificate includes a critical key usage extension specifying the public is intended for generation of digital signatures;
+. the certificate includes an extend key usage extensions;
+. the certificate includes a crl distributionpoints extensions.
+
+[source]
+----
+0000 30 82 04 16  1046: SEQUENCE
+0004 30 82 02 FE   766: .SEQUENCE
+0008 a0 03           3: ..[0]
+0010 02 01           1: ... INTEGER 2
+                      : 02
+0013 02 10          16: .. INTEGER 6565422187515605500000000000000000000
+                      : 04 F0 74 4E 3D 72 65 06 C4 92 77 0A 5E 71 FI 5B
+0031 30 0D          13: .. SEQUENCE
+0033 06 09           9: ... OID 1.2.840.113549.1.1.5 shalwithRSAEncryption
+                      : 2a 86 48 86 f7 Od 01 01 05
+0044 05 00           0: ...NULL
+0046 30 2A          42: .. SEQUENCE
+0048 31 0B          11: ...SET
+0050 30 09           9: ....SEQUENCE
+0052 06 03           3: .....OID 2.5.4.6: C countryName
+                      : 55 04 06
+0057 13 02           2: .....PrintableString
+                      : 43 4E
+0061 31 IB          27: ...SET
+0063 30 19          25: ....SEQUENCE
+0065 06 03           3: .....OID 2.5.4.3: CN
+                      : 55 04 03
+0070 13 12          18: .....PrintableString 'Certificate Center'
+                      : 43 65 72 74 69 66 69 63 61 74 65 20 43 65 6E 74 65 72
+0090 30 1E          30: ..SEQUENCE
+0092 17 0D          13: ...UTCTime  '030807063811Z'
+                      : 30 33 30 38 30 37 30 36 33 38 31 31 5A
+0107 17 0D          13: ...UTCTime  '040806063811Z'
+                      : 30 34 30 38 30 36 30 36 31 38 31 31 5A
+0122 30 7A         122: ..SEQUENCE
+0124 31 IF          31: ...SET
+0126 30 ID          29: ....SEQUENCE
+0128 06 09          9 : .....OID 1.2.840.113549.1.9.1 emailAddress
+                      : 2A 86 48 86 F7 OD 01 09 01
+0139 16 10          16: .....IA5String 'name@mail. com. Cn'
+                      : 6E 61 6D 65 40 6D 61 69 6C 2E 63 6F 6D 2E 63 6E
+0157 31 0B          11: ...SET
+0159 30 09           9: ....SEQUENCE
+0161 06 03           3: .....OID 2.5.4.6: C
+                      : 55 04 06
+0166 13 02           2: .....PrintableString 'CN'
+                      : 43 4E
+0170 31 11          17: ...SET
+0172 30 0F          15: ....SEQUENCE
+0174 06 03           3: .....OID 2.5.4.8: 'S'
+                      : 55 04 08
+0179 IE 08           8: .....BMPString '省份名称'
+                      : 77 01 4E FD 54 OD 79 FO
+0189 31 11          17: ...SET
+0191 30 0F          15: ....SEQUENCE
+0193 06 03           3: .....OID 2.5.4.10 'O'
+                      : 55 04 0A
+0198 IE 08           8: .....BMPString '组织名称'
+                      : 7E C4 7E C7 54 0D 79 F0
+0208 31 11          17: ...SET
+0210 30 0F          15: ....SEQUENCE
+0212 06 03           3: .....OID 2.5.4.11 'OU'
+                      : 55 04 OB
+0217 IE 08           8: .....BMPString '部门名称'
+                      : 90 E8 95 E8 54 0D 79 F0
+0227 31 11          17: ...SET
+0229 30 0F          15: ....SEQUENCE
+0231 06 03           3: .....OID 2.5.4.3 'CN'
+                      : 55 04 03
+0236 1E 08           8: .....BMPString '用户名字'
+                      : 75 28 62 37 54 OD 5B 57
+0246 30 81 9F      159: ..SEQUENCE
+0249 30 0D          13: ...SEQUENCE
+0251 06 09           9: .....OID 1.2.840.113549.1.1.1 rsaEncryption
+                      : 2A 86 48 86 F7 OD 01 01 01
+0262  05 00          0: .....NULL
+0264 03 81 8D      141: ...  BIT STRING
+                      : 00 (0 unused bits)
+                        30 81 89 02 81 81 00 E0 57 4A 86 B6 52 91 85 14
+                        6B 44 DB 9E E9 58 2B 9F 20 86 B0 C1 E5 A9 3B C8
+                        75 08 9C 59 C2 A9 DD 8A 42 6B F8 FC 5F 8C 2E 53
+                        C6 B5 FD A3 EE 55 3D 12 01 05 3B E2 76 CB 59 CE
+                        AE 2C 7A 3D 4C 6B 83 58 39 OF 74 09 OD 61 OC 25
+                        2D 4F 98 3A F2 C7 84 B2 73 OF 61 34 24 CF 29 B8
+                        FA 5C 7E 5F 2A 42 B2 72 E6 BE CA DE 1D ED 3B D0 // TODO: 1D was LD??
+                        0E 25 C3 87 C7 36 EF OE 4C 84 FA A7 00 44 8F 71
+                        FE 46 62 A3 B0 C0 7D 02 03 01 00 01
+0408 A3 82 01 6A   362: ..[3]
+0412 30 82 01 66   358: ...SEQUENCE
+0416 30 1F          31: ....SEQUENCE
+0418 06 03           3: .....OID 2.5.29.35 authorityKeyIdentifier
+                      : 55 1D 23
+0423 04 18          24: .....OCTET STRING
+                      : 30 16 80 14 E7 9F 11 9C EA 2D 20 54 05 34 24 D1
+                        B2 53 23 67 D5 A7 E5 EB
+0449 30 1D          29: ....SEQUENCE
+0451 06 03           3: .....OID 2.5.29.14 subjectKeyIdentifier
+                      : 55 1D 0E
+0456 04 16          22: .....OCTET STRING
+                      : 04 14 5C F5 D9 F7 EC 3E A2 BE B1 3B 7E 63 5E Cl 8B 2A 15 A3 BF 72
+0480 30 0B          11: ....SEQUENCE
+0482 06 03           3: .....OID 2.5.29.15 keyUsage
+                      : 55 1D 0F
+0487 04 04           4: .....OCTET STRING
+                      : 03 02 03 F8
+0493 30 1B          27: ....SEQUENCE
+0495 06 03           3: .....OID 2.5.29.17 subjectAltName
+                      : 55 1D 11
+0500 04 14          20: .....OCTET STRING
+                      : 30 12 81 10 73 69 6E 61 40 6D 61 69 6C 2E 63 6F
+                        0D 2E 63 6E
+0522 30 0C          12: ....SEQUENCE
+0524 06 03           3: .....OID 2.5.29.19 basicConstraints
+                      : 55 1D 13
+0529 04 05           5: .....OCTET STRING
+                      : 30 03 01 01 00
+0536 30 3B          59: ....SEQUENCE
+0538 06 03           3: .....OID 2.5.29.37 extKeyUsage
+                      : 55 ID 25
+0543 04 34          52: .....OCTET STRING
+                      : 30 32 06 08 2B 06 01 05 05 07 03 01 06 08 2B 06
+                        01 05 05 07 03 02 06 08 2B 06 01 05 05 07 03 03
+                        06 08 2B 06 01 05 05 07 03 04 06 08 2B 06 01 05
+                        07 03 08
+0597 30 81 AE      174: ....SEQUENCE
+0600 06 03           3: .....OID 2.5.29.31 cRLDistributionPoints
+                      : 55 1D 1F
+0605 04 81 A6      166: .....OCTET STRING
+                      : 30 81 A3 30 7C A0 7A A0 78 A4 76 30 74 31 0D 30
+                        0B 06 03 55 04 03 13 04 63 72 6C 30 31 0C 30 0A
+                        06 03 55 04 0B 13 03 63 72 6C 31 0C 30 0A 06 03
+                        55 04 0B 13 03 31 30 32 31 0A 30 08 06 03 55 04
+                        0B 13 01 31 31 0D 30 0B 06 03 55 04 0A 13 04 4A
+                        44 5A 59 31 0B 30 09 06 03 55 04 07 13 02 63 43
+                        31 12 30 10 06 03 55 04 08 13 09 4A 69 6C 69 6E
+                        39 39 34 38 31 0B 30 09 06 03 55 04 06 13 02 63
+                        6E 30 23 A0 21 AO IF 86 1D 68 74 74 70 3A 2F 2F
+                        63 72 6C 2E 63 6F 6D 2E 63 6E 2F 63 72 6C 2F 63
+                        72 6C 2E 63 72 6C
+0774 30 0D          13: .SEQUENCE
+0776 06 09           9: .. OID 1.2.840.113549.1.1.5 shalwithRSAEncryption
+                      : 2A 86 48 86 F7 OD 01 01 05
+0787 05 00           0: ..NULL
+0789 03 82 01 01   257: .BIT STRING
+                      : 00 57 DF 8D D5 2A 06 56 84 3A FF IF 2A FD 96 F6
+                        2C 36 D0 24 9C 74 32 C3 C5 BA BB B7 24 29 EB EC
+                        60 E3 EC 90 D6 51 9E 54 42 4D IE 8C A0 79 4C 14
+                        C8 E8 DC 20 A7 B9 0D 09 2A E8 9B 6C 19 44 B4 30
+                        E7 BD F5 40 03 FB 14 89 5C E6 C5 47 E0 00 FA 17
+                        45 61 0A C3 7C A3 7E B5 1D D6 A9 20 7E 70 89 91
+                        4F F4 18 OE E6 C6 2A 7C 39 F4 8D 84 94 57 5B C3
+                        B9 D5 12 C2 IB 54 6D F4 5D 88 6D AF 6C F7 28 DF
+                        F9 23 58 BE 0B 1C 7A C9 83 82 80 98 98 F2 68 BF
+                        BA 85 91 62 83 C4 E5 98 C2 A6 6B C2 B3 97 10 50
+                        3B OE 9C 08 00 A4 34 FB 1B 41 AD 87 5E 2D EB EC
+                        46 45 EA 9A FB 82 B4 B9 A5 AF 4A 61 88 5F A8 49
+                        97 44 08 C2 3B 32 00 64 07 87 OB 2D 9D 7A 62 8F
+                        44 56 F9 71 B9 89 10 B0 13 94 3ABD 33 6B 19 89
+                        14 9F 58 E6 7D 0F 94 64 32 EA8E CE C8 77 65 C0
+                        C5 D6 17 EA 71 A8 B8 D3 6B 50 D1 B3 86 28 C9 78
+                        FE
+----
+
+=== SM2数字证书编码
+
+以下内容将以X.509版本3证书为例，证书包含下列信息:
+
+[loweralpha]
+. the serial number is 64 57 00 b7 00 00 02 f6 (dec is 7230248512745636598) ;
+. the certificate is signed with SM2 and the SM3 hash algorithm;
+. the issuer's distinguished name is CN=OSCCA SM2 CA，C=CN;
+. and the subject's distinguished name is CN=用户名字，OU=部门名称，O=组织名称，S=省份名称，C=CN;
+. the certificate was issued on March 22,2011 and expired on March 29,2014;
+. the certificate contains a 256-bit SM2 EC public key;
+. the certificate is an end entity certificate (not a CA certificate);
+. the certificate includes an authority key identifier, subject KeyIdentifier and basic constraints   extension;
+. the certificate includes a critical key usage extension specifying the public is intended for generation of digital signatures;
+. the certificate includes an extend key usage extensions;
+
+[source]
+----
+0000 30  200: SEQUENCE {
+0004 30  1A5:   SEQUENCE {
+0008 A0    3:   [0] {
+000A 02    1:     INTEGER 2
+            :   }
+000D 02    8:   INTEGER
+            :     64 57 00 B7 00 00 02 F6
+0017 30    C:   SEQUENCE {
+0019 06    8:     OBJECT IDENTIFIER '1 2 156 10197 1 501'
+0023 05    0:
+            :   }
+0025 30   24:   SEQUENCE {
+0027 31   15:     SET {
+0029 30   13:       SEQUENCE {
+002B 06    3:         OBJECT IDENTIFIER commonName (2 5 4 3)
+0030 13    C:         PrintableString 'OSCCA SM2 CA'
+            :       }
+            :     }
+003E 31    B:     SET {
+0040 30    9:       SEQUENCE {
+0042 06    3:         OBJECT IDENTIFIER countryName (2 5 4 6)
+0045 13    2:         PrintableString 'CN'
+            :       }
+            :     }
+            :   }
+004B 30   1E:   SEQUENCE {
+004D 17    D:     UTCTime '110322074444Z'
+005C 17    D:     UTCTime '140329074400Z'
+006B 30   52:     SEQUENCE {
+006D 31   15:       SET {
+006F 30   13:         SEQUENCE {
+0071 06    3:           OBJECT IDENTIFIER commonName (2 5 4 3)
+0076 0C    C:           UTF8String, 用户名字,
+            :         }
+            :       }
+0084 31   15:       SET {
+0086 30   13:         SEQUENCE {
+0088 06    3:           OBJECT IDENTIFIER organizationalUnitName (2 5 4 11)
+008D 0C    C:           UTF8String, 部门名称,
+            :         }
+            :       }
+009B 31   15:       SET {
+009D 30   13:         SEQUENCE {
+009F 06    3:           OBJECT IDENTIFIER organizationName (2 5 4 10)
+00A4 0C    C:           UTF8String, 组织名称,
+            :         }
+            :       }
+00B2 31    B:       SET {
+00B4 30    9:         SEQUENCE {
+00B6 06    3:           OBJECT IDENTIFIER countryName (2 5 4 6)
+00BB 13    2:           PrintableString 'CN'
+            :         }
+            :       }
+            :     }
+00BF 30   59:     SEQUENCE {
+00C1 30   13:       SEQUENCE {
+00C3 06    7:         OBJECT IDENTIFIER  ecPublicKey (1 2 840 10045 2 1)
+OOCC 06    8:         OBJECT IDENTIFIER '1 2 156 10197 1 301'
+            :       }
+00D6 03   42:       BIT STRING 0 unused bits
+            :         04 97 0A 71 9B CC 02 B4 6E E9 CC DF 59 2F 59 0B
+            :         2D C7 5A AC B1 C7 B9 45 55 FE 07 E2 70 B3 83 9A
+            :         4B EB 4C 37 A3 AD 5E FF BF 23 39 0C AD 36 9A EC
+            :         58 B2 92 32 A0 CA 30 29 6F 0F FI F8 35 FI 52 F6
+            :         76
+            :     }
+011A A3   90:     [3] {
+011D 30   8D:       SEQUENCE {
+0120 30    C:         SEQUENCE {
+0122 06    3:           OBJECT IDENTIFIER basicConstraints (2 5 29 19)
+0127 04    5:           OCTET STRING
+            :             30 03 01 01 00
+            :         }
+012E 30   1D:         SEQUENCE {
+0130 06    3:           OBJECT IDENTIFIER extKeyUsage (2 5 29 37)
+0135 04   16:           OCTET STRING
+            :             30 14 06 08 2B 06 01 05 05 07 03 02 06 08 2B 06
+            :             01 05 05 07 03 04
+            :         }
+014D 30    B:         SEQUENCE {
+014F 06    3:           OBJECT IDENTIFIER keyUsage (2 5 29 15)
+0154 04    4:           OCTET STRING
+            :             03 02 00 CO
+            :         }
+015A 30   11:         SEQUENCE {
+015C 06    9:           OBJECT IDENTIFIER
+            :             netscape-cert-type (2 16 840 1 113730 1 1)
+0167 04    4:           OCTET STRING
+            :             03 02 00 80
+           8:         }
+016D 30   1F:         SEQUENCE {
+016F 06    3:           OBJECT IDENTIFIER authorityKeyIdentifier (2 5 29 35)
+0174 04   18:           OCTET STRING
+            :             30 16 80 14 8E 7B 6D F4 CB 16 BC 42 79 80 22 80
+            :             92 49 97 1C EA BD D3 E5
+            :         }
+018E 30   1D:         SEQUENCE {
+0190 06    3:           OBJECT IDENTIFIER subjectKeyIdentifier (2 5 29 14)
+0195 04   16:           OCTET STRING
+            :             04 14 IE 99 F3 37 A8 7E IF 5D C8 B5 C4 D9 F6 94
+            :             2E A6 9C 24 9F 31
+            :         }
+            :       }
+            :     }
+            :   }
+01 AD 30   C:   SEQUENCE {
+01 AF 06   8:     OBJECT IDENTIFIER '1 2 156 10197 1 501'
+01 B9 05   0:
+            :   }
+01 BB 03  47:   BIT STRING 0 unused bits
+            :     30 44 02 20 50 37 93 B4 0E 0F 1C 9D 3E EE 7F 7E
+            :     02 BE BD 3E DE 01 27 27 20 82 EE 8F 0F 6F E4 8A
+            :     36 3F 26 B9 02 20 B5 70 08 46 76 7B 6F 27 43 6C
+            :     BE D7 45 98 C4 5B 98 5C CB C8 1A 14 0E 2A 3B 03
+            :     55 CA BE F1 72 F2
+            : }
+----
+
 
 [bibliography]
 == Reference documents
-

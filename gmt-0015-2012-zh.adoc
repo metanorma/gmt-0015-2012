@@ -65,10 +65,6 @@
 [[terms]]
 == 术语和定义
 
-=== [zh]#算法标识# [en]#algorithm identifier#
-
-用于标明算法机制的数字化信息
-
 === [zh]#数字证书# [en]#digital certificate#
 
 由国家认可的，具有权威性、可信性和公正性的第三方证书认证机构 (CA) 进行数字签名的一个可信的数字化文件。
@@ -203,6 +199,7 @@ AlgorithmIdentifier ::= SEQUENCE {
 
 * signatureValue域包含了对tbsCertificate域进行数字签名的结果。采用ASN.1 DER编码的
 tbsCertificate作为数字签名的输人，而签名的结果则按照ASN.1编码成BIT STRING类型 并保存在证书签名值域内。
++
 如果签名算法为SM2，SM2密码算法签名数据格式参见GM/T 0009。
 
 === TBSCertificate 及其数据结构
