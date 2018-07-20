@@ -200,7 +200,7 @@ AlgorithmIdentifier ::= SEQUENCE {
 * signatureValue域包含了对tbsCertificate域进行数字签名的结果。采用ASN.1 DER编码的
 tbsCertificate作为数字签名的输人，而签名的结果则按照ASN.1编码成BIT STRING类型 并保存在证书签名值域内。
 +
-如果签名算法为SM2，SM2密码算法签名数据格式参见GM/T 0009。
+如果签名算法为SM2，SM2密码算法签名数据格式参见<<GMT0009>>。
 
 === TBSCertificate 及其数据结构
 
@@ -210,6 +210,7 @@ TBSCertificate包含了证书结构中前十个项的信息。这些信息主要
 
 本项描述了编码证书的版本号。
 
+[[tbs-serial]]
 ===== 序列号 serial number
 
 本项是CA分配给每个证书的一个正整数，一个CA签发的每张证书的序列号必须是唯一的（这 样，通过颁发者的名字和序列号就可以唯一地确定一张证书），CA必须保证序列号是非负整数。序列 号可以是长整数，证书用户必须能够处理长达20个8位字节的序列号值。CA必须确保不使用大于 20个8位字节的序列号。
@@ -218,6 +219,7 @@ TBSCertificate包含了证书结构中前十个项的信息。这些信息主要
 
 本项包含CA签发该证书所使用的密码算法的标识符，这个算法标识符必须与证书中signatureAlgorithm项的算法标识符相同。可选参数的内容完全依赖所标识的具体算法，可以支持用户定义的签 名算法。
 
+[[tbs-issuer]]
 ===== 颁发者 Issuer
 
 本项标识了证书签名和证书颁发的实体。它必须包含一个非空的甄别名称（DN-distinguished name) 。该项被定义为Name类型，其ASN.1的结构如下：
@@ -251,13 +253,16 @@ DirectoryString 类型被定义为 PrintableString, TeletexString，BMPString，
 
 遵循本标准的CA在2049年之前(包括2049年)必须将该时间编码为UTCTime类型，在2050年之后，编码为GeneralizedTime类型。
 
+[[validity-utctime]]
 ====== 世界时间 UTCTime
 
 本项是为国际应用设立的一个标准ASN.1类型，在这里只有本地时间是不够的。UTCTime通过 两个低位数确定年，时间精确到1min或1s。UTCTime包含Z(用于Zulu，或格林威治标准时间）或时间差。
 
 在本项中，UTCTime值必须用格林威治标准时间（Zulu)表示，并且必须包含秒，即使秒的数值为 零（即时间格式为YYMMDDHHMMSSZ)。系统对年字段(YY)必须如下解释：
+
 当YY大于或等于50年，应解释为19YY；当YY不到50年，应解释为20YY。
 
+[[validity-generalizedtime]]
 ====== 通用时间类型 GeneralizedTime
 
 本项是一个标准ASN.1类型，表示时间的可变精确度。GeneralizedTime字段能包含一个本地和 格林威治标准时间之间的时间差。
@@ -314,7 +319,7 @@ DirectoryString 类型被定义为 PrintableString, TeletexString，BMPString，
 
 ====== 综述
 
-本项定义数字证书的标准证书扩展，每个扩展与GB/T 16264.8中定义的一个 OID 相关。这些 OID都是id-ce的成员，其定义如下：
+本项定义数字证书的标准证书扩展，每个扩展与<<GBT162648>>中定义的一个 OID 相关。这些 OID都是id-ce的成员，其定义如下：
 
 [source]
 ----
@@ -483,7 +488,11 @@ id-kp-serverAuth OBJECT IDENTIFIER ::= { id-kp 1 }
 * TLS Web server 鉴别
 
 * Key usage 可以设置为 digitalSignature, keyEncipherment 或 keyAgreement
+
+[source]
+----
 id-kp-clientAuth OBJECT IDENTIFIER ::= { id-kp 2 }
+----
 
 * TLS Web server 鉴别
 
@@ -531,7 +540,7 @@ id-kp-OCSPSigning OBJECT IDENTIFIER ::= { id-kp 9 }
 [source]
 ----
 id-ce-privateKeyUsagePeriod OBJECT IDENTIFIER ::= { id-ce 16 }
-PrivateKeyUsagePeriod ::= SEQUENCE{
+PrivateKeyUsagePeriod ::= SEQUENCE {
   notBefore     [0] GeneralizedTime OPTIONAL,
   notAfter      [1] GeneralizedTime OPTIONAL}
 ----
@@ -733,7 +742,7 @@ IssuerAltName   ::= GeneralName
 
 此项可以是关键的或非关键的，由证书或CRL颁发者选择。不要求支持此扩展的实际应用能处理 所有名称形式。如果此扩展标记为关键的，那么至少应能识别和处理存在的名称形式之一，否则，应认 为此证书无效。除先前的限制以外，允许证书使用系统不理睬具有不能识别的或不支持的名称形式的任何名称。倘若，证书或CRL的颁发者项包含了一个明确标识颁发机构的目录名称，推荐将此项标记 为非关键的。
 
-如果存在此扩展，并标记为关键的，证书或CRL的issuer项可以包含空名称(例如，对应可甄别名 的一个"`0`"序列），在此情况下，颁发者只能用名称或此扩展中的一些名称来标识。颁发者替换名称必 须按 5.2.3.4 的说明进行编码。
+如果存在此扩展，并标记为关键的，证书或CRL的issuer项可以包含空名称(例如，对应可甄别名 的一个"`0`"序列），在此情况下，颁发者只能用名称或此扩展中的一些名称来标识。颁发者替换名称必 须按 <<tbs-issuer>> 的说明进行编码。
 
 ====== 主体目录属性 subjectDirectoryAttributes
 
@@ -863,7 +872,7 @@ SkipCerts类型的值表示在某一限制生效之前需要在认证路径中�
 
 此扩展由证书颁发者选择是关键的还是非关键的。本标准建议将它标记为关键的，否则证书用户 可能不能正确地解释认证机构设定的规则。
 
-
+[[crl-dist-points]]
 ====== 证书撤销列表分发点 CRLDistributionPoints
 
 CRL分发点扩展用来标识如何获得CRL信息，本扩展仅作为证书扩展使用。它可用于认证机构 证书，终端实体公钥证书以及属性证书中。本项指定了 CRL分发点或证书用户的査阅点以确定证书是 否已被撤销。证书用户能从可用分发点获得一个CRL, 或者可以从认证机构目录项获得当前完整的 CRL。
@@ -913,7 +922,7 @@ CRLIssuer字段标识颁发和签署CRL的机构。如果没有此字段, CRL颁
 
 此扩展可以是关键的或非关键的，由证书颁发者选择，建议该扩展设置为非关键的，但CA和应用 应支持该扩展。
 
-如果该扩展标记为关键，CA则要保证分发点包含所用的撤销原因代码keyCompromise和/或CA- Compromise。若没有首先从一个包含了原因代码keyCompromise (对终端实体证书）或 CACompromise (对CA证书）的指定的分发点检索和核对CRL, 证书使用系统将不使用该证书。在分 配点为所有撤销原因代码和由CA (包括作为关键扩展的CRLDistribiitionPoint) 发布的所有证书分配 CRL信息的项中，CA不需要在CA项发布一个完整的CRL。
+如果该扩展标记为关键，CA则要保证分发点包含所用的撤销原因代码keyCompromise和/或CA- Compromise。若没有首先从一个包含了原因代码keyCompromise (对终端实体证书）或 CACompromise (对CA证书）的指定的分发点检索和核对CRL, 证书使用系统将不使用该证书。在分 配点为所有撤销原因代码和由CA (包括作为关键扩展的CRLDistribitionPoint) 发布的所有证书分配 CRL信息的项中，CA不需要在CA项发布一个完整的CRL。
 
 如果此扩展标记为非关键的，当证书使用系统未能识别此扩展项类型时，则只有在下列情况中，该系统使用此证书：
 
@@ -1126,7 +1135,7 @@ AccessDescription ::= SEQUENCE {
 ==== 综述
 
 本标准采用GB/T 16262系列标准的特定编码规则（DER)对下列证书撤销列表项中的各项信息进
-行编码，组成特定的证书撤销列表数据结构。ASN.l DER编码是关于每个元素的标记、长度和值的编 码系统。
+行编码，组成特定的证书撤销列表数据结构。ASN.1 DER编码是关于每个元素的标记、长度和值的编 码系统。
 
 === CRL的数据结构
 
@@ -1192,7 +1201,7 @@ TBSCertList主要包含了版本号、颁发者、生效日期、下次更新日
 
 本项标识了签名和颁发CRL的实体。它必须包含一个非空的甄别名称(DN-distinguished name)。该项被定义为Name类型。
 
-Issuer的编码规则同5.2.3.4。
+Issuer的编码规则同<<tbs-issuer>>。
 
 ===== 生效日期 thisUpdate
 
@@ -1200,9 +1209,9 @@ Issuer的编码规则同5.2.3.4。
 
 遵循本标准的CRL颁发者在2049年之前(包括2049年)必须将该时间编码为UTCTime类型，在 2050年之后，编码为GeneralizedTime类型。
 
-UTCTime的编码规则同5.2.3.5.2。
+UTCTime的编码规则同<<validity-utctime>>。
 
-GeneralizedTime 的编码规则同 5.2.3.5.3。
+GeneralizedTime 的编码规则同 <<validity-generalizedtime>>。
 
 ===== 下次更新日期 nextUpdate
 
@@ -1212,23 +1221,24 @@ GeneralizedTime 的编码规则同 5.2.3.5.3。
 
 遵循本标准的CRL颁发者在2049年之前(包括2049年)必须将该时间编码为UTCTime类型，在 2050年之后，编码为GeneralizedTime类型。
 
-UTCTime的编码规则同 5.2.3.5.2。
+UTCTime的编码规则同 <<validity-utctime>>。
 
-GeneralizedTime 的编码规则同 5.2.3.5.3。
+GeneralizedTime 的编码规则同 <<validity-generalizedtime>>。
 
 
 ===== 被撤销的证书列表 Revoked Certificates
 
 该域标明被撤销的证书序列号、撤销时间和撤销原因。
 
-如果没有被撤销的证书，此项不存在。否则，列出被撤销证书的序列号,并指定撤销的日期。crlEntryExtensions 在 5.3.4.7 中描述。
+如果没有被撤销的证书，此项不存在。否则，列出被撤销证书的序列号,并指定撤销的日期。crlEntryExtensions 在 <<crl-entry>> 中描述。
 
 ===== 扩展项 crlExtensions
 
 该域只可在version 2出现。如果出现，此项由一个或多个CRL扩展的序列组成。
 
-crlExtensions 在 5.3.4 中描述。
+crlExtensions 在 <<crl-extensions>> 中描述。
 
+[[crl-extensions]]
 === CRL扩展项及其数据结构
 
 ===== 颁发机构密钥标识符 authorityKeyIdentifier
@@ -1291,7 +1301,8 @@ IssuingDistributionPoint  ::= SEQUENCE {
 
 须将此项标记成非关键。此项不在增量CRL中出现。
 
-最新证书撤销列表扩展项的格式和数字证书的cRLDistributionPoints扩展项相同。参考5. 2. 4.  2.15。但是，该最新证书撤销列表扩展项中分发点域是有意义的；同时Reasons和cRLIssuer域必须略去。
+最新证书撤销列表扩展项的格式和数字证书的cRLDistributionPoints扩展项相同。参考<<crl-dist-points>>。
+但是，该最新证书撤销列表扩展项中分发点域是有意义的；同时Reasons和cRLIssuer域必须略去。
 
 [source]
 ----
@@ -1299,6 +1310,8 @@ id-ce-freshestCRL OBJECT IDENTIFIER ::=  { id-ce 46 }
 FreshestCRL ::= CRLDistributionPoints
 ----
 
+
+[[crl-entry]]
 ===== 证书撤销列表条目 CRL Entry
 
 ====== 原因代码 Reason Code
@@ -1331,7 +1344,7 @@ CRLReason ::= ENUMERATED {
 
 撤销时间是个非关键扩展，表明知道或怀疑私钥泄露或证书失效的时间。
 
-该域包含的GeneralizedTime必须使用格林威治标准时间，必须按照5.2.3.5.3的要求表示。
+该域包含的GeneralizedTime必须使用格林威治标准时间，必须按照<<validity-generalizedtime>>的要求表示。
 
 [source]
 ----
@@ -1363,14 +1376,12 @@ CertificateIssuer ::= GeneralNames
 
 |基本证书域（TBSCertificate)
 |签名算法域（signatureAlgorithm)
-|签名值域（signature Value)
+|签名值域（signatureValue)
 
 |===
 
+
 === 基本证书域（见<<table-a2>>)
-
-表A. 2基本证书域结构
-
 
 [[table-a2]]
 .基本证书域结构
@@ -1380,21 +1391,22 @@ CertificateIssuer ::= GeneralNames
 |描述
 |说明
 
-|version  |版本号
-|serialNumber  |序列号
-|signature  |签名算法
-|issuer  |颁发者
-|validity  |有效日期
-|subject  |主体
-|subjectPublicKeyInfo  |主体公钥信息
-|issuerUniqueID  |颁发者唯一标识符  本标准中不使用
-|subjectUniqueID  |主体唯一标识符  本标准中不使用
-|extensions  |扩展项按本标准的扩展项进行定义，参考<<appendix-a3>>
+|version  |版本号 |
+|serialNumber  |序列号 |
+|signature  |签名算法 |
+|issuer  |颁发者 |
+|validity  |有效日期 |
+|subject  |主体 |
+|subjectPublicKeyInfo  |主体公钥信息 |
+|issuerUniqueID  |颁发者唯一标识符  |本标准中不使用
+|subjectUniqueID  |主体唯一标识符  |本标准中不使用
+|extensions  |扩展项 |按本标准的扩展项进行定义，参考<<appendix-a3>>
 
 |===
 
+
 [[appendix-a3]]
-=== 标准的扩展域（见表<<table-a3>>)
+=== 标准的扩展域（见<<table-a3>>)
 
 [[table-a3]]
 .标准的扩展域结构
@@ -1436,7 +1448,7 @@ CertificateIssuer ::= GeneralNames
 [appendix,obligation="normative"]
 == 证书的结构实例
 
-=== 用户证书的结构实例（见表<<table-b1>>）
+=== 用户证书的结构实例（见<<table-b1>>）
 
 [[table-b1]]
 .用户证书结构
@@ -1468,7 +1480,7 @@ CertificateIssuer ::= GeneralNames
 
 |===
 
-=== 服务器证书的结构实例（见表<<table-b2>>）
+=== 服务器证书的结构实例（见<<table-b2>>）
 
 [[table-b2]]
 .服务器证书结构
@@ -1522,7 +1534,7 @@ CertificateIssuer ::= GeneralNames
 对于终端实体签名证书和加密证书，它们应该总是成对出现，其生命周期由CA中心进行管理。对于双用途终端实体证书（即既用作签名，又用于加密的单张终端实体证书），由于其安全和可管理性存在问题，因此不建议使用。
 
 
-=== 自签名CA证书内容表（见表<<table-c1>>）
+=== 自签名CA证书内容表（见<<table-c1>>）
 
 [[table-c1]]
 .基本证书域结构
@@ -1548,14 +1560,14 @@ CertificateIssuer ::= GeneralNames
 |tbsCertificate |||  待签名内容
 
 |version ||  2 |整数2用于版本3证书
-|serialNumber  | |INTEGER  |唯一正整数参考5.2.3.2
+|serialNumber  | |INTEGER  |唯一正整数参考<<tbs-serial>>
 |issuer |||
 |Name  |||    必须与主体DN一致
 |RDNSequence |||
 | RelativeDistinguishedName |||
 |AttributeTypeAndValue  |||
 |AttributeType    ||  OID |
-|AttributeValue    ||| 参考 5.2.3.4
+|AttributeValue    ||| 参考 <<tbs-issuer>>
 |validity |||
 |NotBefore |||
 |Time |||
@@ -1571,7 +1583,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName  |||
 |AttributeTypeAndValue  |||
 |AttributeType  ||  OID |
-|AttributeValue  ||| 参考 5.2.3.4
+|AttributeValue  ||| 参考 <<tbs-issuer>>
 |subjectPublicKeyInfo  |||
 |algorithm |||
 |AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
@@ -1592,7 +1604,7 @@ CertificateIssuer ::= GeneralNames
 |KeyIdentifier  ||OCTET字符串  |公钥值的SHA-1哈希算法摘要
 |subjectInfoAccess  |FALSE  | |对象信息存储包括一系列访问方法。 只有一种存储方法被定义为CA证书中
 |AccessDescription |||
-|accessMethod  ||id-ad-caRepository (1. 3. 6.1.5. 5. 7. 48.5)
+|accessMethod  ||id-ad-caRepository (1.3.6.1.5.5.7.48.5)
 |自签名证书至少要包括存储方法一个实例，这种存储方法包括URI名字形成LDAP访问目录服务器的指定位置。证书也可包括URI名字形成 指定HTTP访问WEB服务器。每一个URI应指向CA证书的位置
 
 |accessLocation |||
@@ -1652,7 +1664,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName |||
 |AttributeTypeAndValue  |||
 |AttributeType    ||  OID |
-|AttributeValue    ||| 参考 5.2.3.4
+|AttributeValue    ||| 参考 <<tbs-issuer>>
 |validity |||
 |NotBefore |||
 |Time |||
@@ -1668,7 +1680,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName  |||
 |AttributeTypeAndValue  |||
 |AttributeType  ||  OID |
-|AttributeValue  ||| 参考 5.2.3.4
+|AttributeValue  ||| 参考 <<tbs-issuer>>
 |subjectPublicKeyInfo  |||
 |algorithm |||
 |AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
@@ -1799,7 +1811,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName |||
 |AttributeTypeAndValue  |||
 |AttributeType    ||  OID |
-|AttributeValue    ||| 参考 5.2.3.4
+|AttributeValue    ||| 参考 <<tbs-issuer>>
 |validity |||
 |NotBefore |||
 |Time |||
@@ -1815,7 +1827,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName  |||
 |AttributeTypeAndValue  |||
 |AttributeType  ||  OID |
-|AttributeValue  ||| 参考 5.2.3.4
+|AttributeValue  ||| 参考 <<tbs-issuer>>
 |subjectPublicKeyInfo  |||
 |algorithm |||
 |AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
@@ -1951,7 +1963,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName |||
 |AttributeTypeAndValue  |||
 |AttributeType    ||  OID |
-|AttributeValue    ||| 参考 5.2.3.4
+|AttributeValue    ||| 参考 <<tbs-issuer>>
 |validity |||
 |NotBefore |||
 |Time |||
@@ -1967,7 +1979,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName  |||
 |AttributeTypeAndValue  |||
 |AttributeType  ||  OID |
-|AttributeValue  ||| 参考 5.2.3.4
+|AttributeValue  ||| 参考 <<tbs-issuer>>
 |subjectPublicKeyInfo  |||
 |algorithm |||
 |AlgorithmIdentifier  ||| 公钥算法，可能是RSA公钥或椭圆曲线公钥
@@ -2068,7 +2080,7 @@ CertificateIssuer ::= GeneralNames
 
 |===
 
-=== 证书撤销列表内容表（见表<<table-c5>>)
+=== 证书撤销列表内容表（见<<table-c5>>)
 
 [[table-c5]]
 .证书撤销列表内容表
@@ -2102,7 +2114,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguishedName |||
 |AttributeTypeAndValue  |||
 |AttributeType    ||  OID |
-|AttributeValue    ||| 参考 5.2.3.4
+|AttributeValue    ||| 参考 <<tbs-issuer>>
 
 |thisUpdate |||
 |Time |||
@@ -2190,7 +2202,7 @@ CertificateIssuer ::= GeneralNames
 . the serial number is 6565422187515605500000000000000000000;
 . the certificate is signed with RSA and the sha1 hash algorithm;
 . the issuer's distinguished name is CN = Certificate Center； C=CN;
-. and the subject's distinguished name is CN=用户名字；OU =部门名称；O =组织名称；S== 省份名称；C=CN;
+. and the subject's distinguished name is CN=用户名字；OU=部门名称；O=组织名称；S=省份名称；C=CN;
 . the certificate was issued on August 7, 2003 and expired on August 6, 2004;
 . the certificate contains a 1024-bit RSA public key;
 . the certificate is an end entity certificate (not a CA certificate);
@@ -2236,7 +2248,7 @@ CertificateIssuer ::= GeneralNames
 0126 30 ID          29: ....SEQUENCE
 0128 06 09          9 : .....OID 1.2.840.113549.1.9.1 emailAddress
                       : 2A 86 48 86 F7 OD 01 09 01
-0139 16 10          16: .....IA5String 'name@mail. com. Cn'
+0139 16 10          16: .....IA5String 'name@mail.com.cn'
                       : 6E 61 6D 65 40 6D 61 69 6C 2E 63 6F 6D 2E 63 6E
 0157 31 0B          11: ...SET
 0159 30 09           9: ....SEQUENCE
