@@ -69,20 +69,20 @@
 
 用于标明算法机制的数字化信息
 
-== [zh]#数字证书# [en]#digital certificate#
+=== [zh]#数字证书# [en]#digital certificate#
 
 由国家认可的，具有权威性、可信性和公正性的第三方证书认证机构 (CA) 进行数字签名的一个可信的数字化文件。
 
-== [zh]#证书撤销列表# [en]#certificate revocation list#
+=== [zh]#证书撤销列表# [en]#certificate revocation list#
 [alt]#CRL#
 
 CA 对撤销的证书而签发的一个列表文件。
 
-== [zh]#CA 证书# [en]#CA certificate#
+=== [zh]#CA 证书# [en]#CA certificate#
 
 颁发给数字证书认证机构的证书。
 
-== [zh]#终端实体证书# [en]#entity certificate#
+=== [zh]#终端实体证书# [en]#entity certificate#
 
 终端实体也称为用户证书，是由数字证书认证机构签发的个人证书、机构证书、设备证书等。
 
