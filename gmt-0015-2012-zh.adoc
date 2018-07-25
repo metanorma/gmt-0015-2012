@@ -54,12 +54,12 @@
 
 下列文件对于本文件的应用是必不可少的。凡是注日期的引用文件，仅注日期的版本适用于本文件，凡是不注日期的引用文件，其最新版本（包括所有的修改单）适用于本文件。
 
-* [[[GBT162648,GB/T 16264.8]]]   _信息技术  开放系统互连 目录 第8部分；公钥和属性证书框架_
-* [[[GMT0006,GM/T 0006]]]  _密码应用标识规范_
-* [[[GMT0009,GM/T 0009]]]  _SM2 密码算法使用规范_
-* [[[GMT0010,GM/T 0010]]]  _SM2 密码算法加密签名消息语法规范_
-* [[[PKCS7,PKCS #7]]]  _Cryptographic Message Syntax Standard_
-* [[[RFC5280,RFC 5280]]] _Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile_
+* [[[GBT162648,GB/T 16264.8]]],  _信息技术--开放系统互连目录--第8部分：公钥和属性证书框架_
+* [[[GMT0006,GM/T 0006]]], _密码应用标识规范_
+* [[[GMT0009,GM/T 0009]]], _SM2 密码算法使用规范_
+* [[[GMT0010,GM/T 0010]]], _SM2 密码算法加密签名消息语法规范_
+* [[[PKCS7,PKCS #7]]], _Cryptographic Message Syntax Standard_
+* [[[RFC5280,RFC 5280]]], _Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile_
 
 
 [[terms]]
@@ -121,11 +121,11 @@ CRL是CA对撤销的证书而签发的一个列表文件，该文件可用于应
 
 === 数字证书格式
 
-=== 综述
+==== 综述
 
 本标准采用GB/T 16262系列标准的特定编码规则（DER)对下列证书项中的各项信息进行编码， 组成特定的证书数据结构。ASN.1 DER编码是关于每个元素的标记、长度和值的编码系统。
 
-=== 基本证书域的数据结构
+==== 基本证书域的数据结构
 
 数字证书的基本数据结构如下：
 
@@ -202,7 +202,7 @@ tbsCertificate作为数字签名的输人，而签名的结果则按照ASN.1编�
 +
 如果签名算法为SM2，SM2密码算法签名数据格式参见<<GMT0009>>。
 
-=== TBSCertificate 及其数据结构
+==== TBSCertificate 及其数据结构
 
 TBSCertificate包含了证书结构中前十个项的信息。这些信息主要有主体和颁发者的名称、主体 的公钥、有效期、版本号和序列号，有些TBSCertificate还可以包含可选的唯一标识符项和扩展项。本 条的下述段落描述这些项的语法和语义。
 
@@ -249,12 +249,14 @@ DirectoryString 类型被定义为 PrintableString, TeletexString，BMPString，
 
 本项是一个时间段，在这个时间段内，CA担保它将维护关于证书状态的信息。该项被表示成一个 具有两个时间值的SEQUENCE类型数据:证书有效期的起始时间（notBefore)和证书有效期的终止时 间（not After)。NotBefore 和 Not After 这两个时间都可以作为 UTCTime 类型或者 GeneralizedTime 类型进行编码。
 
-====== 编码类型要求
+[level=6]
+===== 编码类型要求
 
 遵循本标准的CA在2049年之前(包括2049年)必须将该时间编码为UTCTime类型，在2050年之后，编码为GeneralizedTime类型。
 
 [[validity-utctime]]
-====== 世界时间 UTCTime
+[level=6]
+===== 世界时间 UTCTime
 
 本项是为国际应用设立的一个标准ASN.1类型，在这里只有本地时间是不够的。UTCTime通过 两个低位数确定年，时间精确到1min或1s。UTCTime包含Z(用于Zulu，或格林威治标准时间）或时间差。
 
@@ -263,7 +265,8 @@ DirectoryString 类型被定义为 PrintableString, TeletexString，BMPString，
 当YY大于或等于50年，应解释为19YY；当YY不到50年，应解释为20YY。
 
 [[validity-generalizedtime]]
-====== 通用时间类型 GeneralizedTime
+[level=6]
+===== 通用时间类型 GeneralizedTime
 
 本项是一个标准ASN.1类型，表示时间的可变精确度。GeneralizedTime字段能包含一个本地和 格林威治标准时间之间的时间差。
 
@@ -317,7 +320,8 @@ DirectoryString 类型被定义为 PrintableString, TeletexString，BMPString，
 
 ===== 标准扩展
 
-====== 综述
+[level=6]
+===== 综述
 
 本项定义数字证书的标准证书扩展，每个扩展与<<GBT162648>>中定义的一个 OID 相关。这些 OID都是id-ce的成员，其定义如下：
 
@@ -326,7 +330,8 @@ DirectoryString 类型被定义为 PrintableString, TeletexString，BMPString，
 id-ce   OBJECT IDENTIFIER   ::=   {  joint-iso-ccitt(2) ds(5) 29 }
 ----
 
-====== 颁发机构密钥标识符 authorityKeyIdentifier
+[level=6]
+===== 颁发机构密钥标识符 authorityKeyIdentifier
 
 颁发机构密钥标识符扩展提供了一种方式，以识别与证书签名私钥相应的公钥。当颁发者由于有 多个密钥共存或由于发生变化而具有多个签名密钥时使用该扩展。识别可基于颁发者证书中的主体密
 
@@ -336,7 +341,8 @@ id-ce   OBJECT IDENTIFIER   ::=   {  joint-iso-ccitt(2) ds(5) 29 }
 
 本项既可用作证书扩展亦可用作CRL扩展。本项标识用来验证在证书或CRL上签名的公开密 钥。它能辨别同一 CA使用的不同密钥 (例如，在密钥更新发生时）。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -355,7 +361,8 @@ authorityCertSerialNumber ABSENT})
 KeyIdentifier ::= OCTET STRING
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 KeyIdentifier项的值应从用于证实证书签名的公钥导出或用产生唯一值的方法导出。公开密钥的 密钥标识符KeyIdentifier可采用下述两种通用的方法生成：
 
@@ -371,18 +378,21 @@ KeyIdentifier项的值应从用于证实证书签名的公钥导出或用产生�
 
 结构中的keyIdentifier、authorityCertSerialNumber建议为必选，但本扩展必须是非关键的。
 
-====== 主体密钥标识符 subjectKeyIdentifier
+[level=6]
+===== 主体密钥标识符 subjectKeyIdentifier
 
 本项提供一种识别包含有一个特定公钥的证书的方法。此扩展标识了被认证的公开密钥。它能够 区分同一主体使用的不同密钥（例如，当密钥更新发生时）。
 
-======= 定义
+[level=7]
+===== 定义
 [source]
 ----
 id-ce-subjectKeyIdentifier OBJECT IDENTIFIER  ::= { id-ce 14 }
 SubjectKeyIdentifier  ::= KeyIdentifier
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 
 对于使用密钥标识符的主体的各个密钥标识符而言，每一个密钥标识符均应是唯一的。此扩展项总是非关键的。
@@ -390,11 +400,13 @@ SubjectKeyIdentifier  ::= KeyIdentifier
 所有的CA 证书必须包括本扩展；而且CA 签发证书时必须把 CA  证书中本扩展的值赋给终端实体证书 AuthorityKeyIdentifier 扩展中的 KeyIdentifier项。CA 证书的主体密钥标识符应从公钥中或者生成唯一值的方法中导出。终端实体证书的主体密钥标识符应从公钥中导出，有两种通用的方法从公钥中生成密钥标识符（见<<subject-public-key-info>>）。
 
 
-====== 密钥用法 KeyUsage
+[level=6]
+===== 密钥用法 KeyUsage
 
 本项说明已认证的公开密钥用于何种用途。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -411,7 +423,8 @@ KeyUsage ::= BIT STRING {
   decipherOnly      (8) }
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 KeyUsage 类型中的用法如下：
 
@@ -447,11 +460,13 @@ keyCertSign只用于CA证书。如果KeyUsage被置为keyCertSign和基本限制
 
 在应用中，使用该扩展项对证书类型的进行区别，当设置了 c)、d)、h)、i)位中的一项时，表示该证书 为加密证书；当设置了 a)、b)位中的一项时，表示该证书为签名证书。
 
-====== 扩展密钥用途 extKeyUsage
+[level=6]
+===== 扩展密钥用途 extKeyUsage
 
 本项指明已验证的公开密钥可以用于一种用途或多种用途，它们可作为对密钥用法扩展项中指明 的基本用途的补充或替代。
 
-======= 定义
+[level=7]
+===== 定义
 
 // TODO: original document missing "="
 // id-ce-extKeyUsage OBJECT IDENTIFIER ：： {id-ce 37}
@@ -465,7 +480,8 @@ KeyPurposeId      ::= OBJECT IDENTIFIER
 ----
 
 
-======= 说明
+[level=7]
+===== 说明
 
 密钥的用途可由有此需要的任何组织定义。用来标识密钥用途的客体标识符应按照 GB/T 17969.1—2000 来分配。
 
@@ -531,11 +547,13 @@ id-kp-OCSPSigning OBJECT IDENTIFIER ::= { id-kp 9 }
 * OCSP 应答签名
 * Key usage 可以设置为 digitalSignature, nonRepudiation
 
-====== 私有密钥使用期 privateKeyUsagePeriod
+[level=6]
+===== 私有密钥使用期 privateKeyUsagePeriod
 
 本项指明与已验证的公开密钥相对应的私有密钥的使用期限。它只能用于数字签名密钥。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -545,7 +563,8 @@ PrivateKeyUsagePeriod ::= SEQUENCE {
   notAfter      [1] GeneralizedTime OPTIONAL}
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 notBefore 字段指明私有密钥可能用于签名的最早日期和时间。如果没有 notBefore字段，就不提供有关私有密钥有效使用期何时开始的信息。NotAfter 字段指明私有密钥可以用于签名的最迟日期和时间。如果没有 notAfter 字段，就不提供有关私有密钥有效使用期何时结束的信息。
 
@@ -559,7 +578,8 @@ NOTE: 数字签名的验证者想要检查直到验证时刻此密钥是否未�
 签名验证者不能依赖 CRL 所统治的协议。
 
 
-====== 证书策略 certificatePolicies
+[level=6]
+===== 证书策略 certificatePolicies
 
 本项列出了由颁发的 CA 所认可的证书策略，这些策略适用于证书以及关于这些证书策略的任选的限定符信息。
 
@@ -569,7 +589,8 @@ NOTE: 数字签名的验证者想要检查直到验证时刻此密钥是否未�
 
 为了提高互操作性，本标准建议策略信息条目中只包含一个OID，如果一个OID不够，建议使用本 项定义的限定语。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -615,7 +636,8 @@ DisplayText ::= CHOICE {
   utf8String      UTF8String  (SIZE (1..200)) }
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 本项定义了两种策略限定语，以供证书策略制定者和证书颁发者使用。限定语类型为CPS Pointer 和User Notice限定语。
 
@@ -624,11 +646,13 @@ CPS Pointer 限定语包含一个 CA 发布的 CPS (Certification Practice State
 User notice有两种可选字段：noticeRef字段和explicitText字段a NoticeRef字段命名一个团体， 并通过记数识别该团体所做的一个专用文本声明。ExplicitText字段在证书内直接包括文本声明，该 字段是一个最多含有200字符的串。如果noticeRef和explicitText选项都在同一个限定语中，且如果 应用软件可以找出由noticeRef选项指明的通知文本，则应展示该文本，否则应展示explicitText串。
 
 
-====== 策略映射 policyMappings
+[level=6]
+===== 策略映射 policyMappings
 
 本项只用于CA证书。它列出一个或多个OID对，每对包括一个issuerDomainPolicy和一个subjectDomainPolicy。这种成对形式表明，颁发者CA认为其issuerDomainPolicy与主体CA的subject- DomainPolicy是等效的。颁发者CA的用户可以为某应用接收一个issuerDomainPolicy。策略映射告知颁发者CA的用户，哪些同CA有关的策略可以与它们接收到的策略是等效的。
 
-======= 定义
+[level=7]
+===== 定义
 [source]
 ----
 id-ce-policyMappings OBJECT IDENTIFIER ::= { id-ce 33 }
@@ -638,7 +662,8 @@ PolicyMappingsSyntax ::= SEQUENCE SIZE(1..MAX) OF SEQUENCE{
   subjectDomainPolicy    CertPolicyId}
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 策略不会被映射到或来自特殊的值anyPolicy。
 
@@ -651,7 +676,8 @@ NOTE: 政策映射意味着作出有关决策时会耗费显著的管理开销�
 NOTE: 预计政策映射实际上只能用于政策声明非常简单的有限环境。
 
 
-====== 主体替换名称 subjectAltName
+[level=6]
+===== 主体替换名称 subjectAltName
 
 
 本项包含一个或多个替换名（可使用多种名称形式中的任一个)供实体使用，CA把该实体与认证的公开密钥绑定在一起。
@@ -659,7 +685,8 @@ NOTE: 预计政策映射实际上只能用于政策声明非常简单的有限�
 主体替换名扩展允许把附加身份加到证书的主体上。所定义的选项包括因特网电子邮件地址、 DNS名称、IP地址和统一资源标识符(URI)。还有一些纯本地定义的选项。可以包括多名称形式和每 个名称形式的多个范例。当这样的身份被附加到一个证书中时，必须使用主体选择名称或颁发者选择 名称扩展。由于主体可替换名被认为是与公钥绑在一起的，主体替换名的所有部分必须由CA认证。
 
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -687,7 +714,8 @@ EDIPartyName::= SEQUENCE{
   partyName        [1]  DirectoryString  }
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 GeneralName类型中可替换的值是下列各种形式的名称：
 
@@ -726,11 +754,13 @@ NOTE: 如果存在此扩展并标记为关键的，证书的subject项可以包�
 NOTE: 进一步说明可参考RFC2459中的4.2.1.7。
 
 
-====== 颁发者替换名称 issuerAltName
+[level=6]
+===== 颁发者替换名称 issuerAltName
 
 本项包含一个或多个替换名称(可使用多种名称形式中的任一个），以供证书或CRL颁发者使用。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -738,17 +768,20 @@ id-ce-issuerAltName OBJECT IDENTIFIER   ::= { id-ce 18 }
 IssuerAltName   ::= GeneralName
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 此项可以是关键的或非关键的，由证书或CRL颁发者选择。不要求支持此扩展的实际应用能处理 所有名称形式。如果此扩展标记为关键的，那么至少应能识别和处理存在的名称形式之一，否则，应认 为此证书无效。除先前的限制以外，允许证书使用系统不理睬具有不能识别的或不支持的名称形式的任何名称。倘若，证书或CRL的颁发者项包含了一个明确标识颁发机构的目录名称，推荐将此项标记 为非关键的。
 
 如果存在此扩展，并标记为关键的，证书或CRL的issuer项可以包含空名称(例如，对应可甄别名 的一个"`0`"序列），在此情况下，颁发者只能用名称或此扩展中的一些名称来标识。颁发者替换名称必 须按 <<tbs-issuer>> 的说明进行编码。
 
-====== 主体目录属性 subjectDirectoryAttributes
+[level=6]
+===== 主体目录属性 subjectDirectoryAttributes
 
 本项为证书主体传送其期望的任何目录属性值。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -757,15 +790,18 @@ SubjectDirectoryAttributes  ::= SEQUENCE SIZE (1..MAX) OF Attribute
 AttributesSyntax            ::= SEQUENCE SIZE (1..MAX) OF Attribute
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 该扩展总是非关键的。
 
-====== 基本限制 basicConstraints
+[level=6]
+===== 基本限制 basicConstraints
 
 本项用来标识证书的主体是否是一个CA，通过该CA可能存在的认证路径有多长。
 
-======= 定义
+[level=7]
+===== 定义
 
 //TODO: the document had this before, which is wrong
 //CABOOLEAN DEFAULT FALSE,
@@ -779,7 +815,8 @@ BasicConstraintsSyntax  ::= SEQUENCE{
   pathLenConstraint   INTEGER (0..MAX) OPTIONAL}
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 
 CA字段标识此公钥证书是否可用来验证证书签名。
@@ -801,11 +838,13 @@ NOTE: 如果此扩展不存在或标记为非关键项的并且未被证书使�
 NOTE: 为限制一证书主体只是一个端实体，即，不是CA，颁发者可以在扩展中只包含一个空SEQUENCE值的扩展项。
 
 
-====== 名称限制 nameConstraints
+[level=6]
+===== 名称限制 nameConstraints
 
 本项仅在一张CA证书使用，它指示了一个名称空间，在此空间设置了认证路径可以在后续证书中主体名称中被找到。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -824,7 +863,8 @@ GeneralSubtree  ::= SEQUENCE {
 BaseDistance ::= INTEGER (0..MAX)
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 如果存在permittedSubtrees和excludedSubtrees字段，则它们每个都规定一个或多个命名子树， 每个由此子树的根的名称或任选处于其子树内的任意节点名称来定义，子树范围是一个由上界和/或下界限定的区域。如果permittedSubtrees存在，在主体CA和认证路径中后续CA颁发的所有证书中， 只有那些在子树中具有与permittedSubtrees字段规定主体名称相同的证书才是可接受的。如果excludedSubtrees存在，由主体CA或认证路径中后续CA颁发的所有证书中，同excludedSubtrees规定 主体名称相同的任何证书都是不可接受的。如果PermittedSutrees和excluded Subtrees都存在并且名 称空间重叠，则优先选用排斥声明（exclusion statement）。
 
@@ -844,12 +884,14 @@ Maximum字段规定了子树内这一区域的下边界。最后的命名形式�
 
 本标准中，任何名称格式都不使用最小和最大字段，最小数总为0，最大数总是空缺的。
 
-====== 策略限制 policyConstraints
+[level=6]
+===== 策略限制 policyConstraints
 
 本项用于向 CA 颁发的证书中，以两种方式限制路经确认。
 它可以用来禁止策略映射或要求路径中的每个证书包含一个认可的策略标示符。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -862,7 +904,8 @@ PolicyConstraints ::= SEQUENCE{
 SkipCerts ::= INTEGER (0..MAX)
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 如果 requireExplicitPolicy字段存在，并且证书路径包含一个由指定 CA签发的证书，所有在此路径中的证书都有必要在证书扩展项中包含合适的策略标识符。合适的策略标识符是由用户在证书策略中定义的标识符，或声明通过策略映射与其等价的策略的标识符。指定的 CA 是指包含此扩展信息的认证机构（如果 requireExplicitpolicy 的值为 "`0`" ）或是认证路径中后续认证机构CA（由非 "`0`" 值指示的）。
 
@@ -873,11 +916,13 @@ SkipCerts类型的值表示在某一限制生效之前需要在认证路径中�
 此扩展由证书颁发者选择是关键的还是非关键的。本标准建议将它标记为关键的，否则证书用户 可能不能正确地解释认证机构设定的规则。
 
 [[crl-dist-points]]
-====== 证书撤销列表分发点 CRLDistributionPoints
+[level=6]
+===== 证书撤销列表分发点 CRLDistributionPoints
 
 CRL分发点扩展用来标识如何获得CRL信息，本扩展仅作为证书扩展使用。它可用于认证机构 证书，终端实体公钥证书以及属性证书中。本项指定了 CRL分发点或证书用户的査阅点以确定证书是 否已被撤销。证书用户能从可用分发点获得一个CRL, 或者可以从认证机构目录项获得当前完整的 CRL。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -905,7 +950,8 @@ ReasonFlags ::= BITSTRING {
   certificateHold         (6) }
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 
 distributionPoint字段标识如何能够获得CRL的位置。如果此字段缺省，分发点名称默认为CRL 颁发者的名称。
@@ -937,11 +983,13 @@ NOTE: 一个以上的CRL分发者对应一个证书CRL颁发者是可能的。�
 NOTE: 证书撤销列表CRL的应用，请参照RFC2459中的第5章。
 
 
-====== 限制所有策略 inhibitAnyPolicy
+[level=6]
+===== 限制所有策略 inhibitAnyPolicy
 
 本项指定了一个限制，它指出了任何策略，对于从指定CA开始的认证路径中的所有证书的证书策 略，都不是显式匹配。指定的CA要么是包含这个扩展的证书的主体CA (如果inhibitAnyPolicy值为0) ， 要么是认证路径（由非0值指定）中后继认证机构CA。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -950,15 +998,18 @@ InhibitAnyPolicy    ::= SkipCerts
 SkipCerts           ::= INTEGER(0..MAX)
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 本扩展由证书颁发者选择关键项还是非关键项。建议它标记为关键项，否则证书用户可能不能正 确地解释认证机构CA设定的规则。
 
-====== 最新证书撤销列表freshestCRL
+[level=6]
+===== 最新证书撤销列表freshestCRL
 
 最新CRL扩展一般作为证书扩展使用，或在发给认证机构和用户的证书中使用。该项标识了 CRL，对CRL来说证书用户应包含最新的撤销信息（例如：最新的dCRL) 。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -966,15 +1017,18 @@ id-ce-CRL freshestCRL OBJECT IDENTIFIER ::= { id-ce 46 }
 freshestCRL   ::= {CRLDistPointsSyntax}
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 根据证书颁发者的选择，这个扩展可能是关键的，也可能是非关键的。如果最新的CRL扩展是关 键的，那么证书使用系统不使用没有首先进行撤销和核对的最新CRL的证书。如果扩展被标记为非关 键的，证书使用系统能使用本地方法来决定是否需要检查最新的CRU。
 
-====== 个人身份标识码 IdentifyCode
+[level=6]
+===== 个人身份标识码 IdentifyCode
 
 个人身份标识码扩展项用于表示个人身份标识的号码。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -987,7 +1041,8 @@ IdentifyCode ::= CHOICE {
 }
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 [source]
 ----
@@ -998,11 +1053,13 @@ militaryOfficerCardNumber     --军官证号码
 
 此扩展项标记为非关键的。
 
-====== 个人社会保险号 InsuranceNumber
+[level=6]
+===== 个人社会保险号 InsuranceNumber
 
 个人社会保险号扩展项用于表示个人社会保险号码。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -1010,15 +1067,18 @@ ID-InsuranceNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.2 }
 InsuranceNumber     ::= PrintableString
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 此扩展项标记为非关键的。
 
-====== 企业工商注册号 ICRegistrationNumber
+[level=6]
+===== 企业工商注册号 ICRegistrationNumber
 
 企业工商注册号扩展项用于表示企业工商注册号码。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -1026,15 +1086,18 @@ ID-ICRegistrationNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.3 }
 ICRegistrationNumber ::= PrintableString
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 此扩展项标记为非关键的。
 
-====== 企业组织机构代码 OrganizationCode
+[level=6]
+===== 企业组织机构代码 OrganizationCode
 
 企业组织机构代码号扩展项用于表示企业组织机构代码。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -1042,15 +1105,18 @@ ID-OrganizationCode OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.4 }
 OrganizationCode ::= PrintableString
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 此扩展项标记为非关键的。
 
-====== 企业税号 TaxationNumber
+[level=6]
+===== 企业税号 TaxationNumber
 
 企业税号扩展项用于表示企业税号码。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -1058,13 +1124,15 @@ ID-TaxationNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.5 }
 TaxationNumber    ::= PrintableString
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 此扩展项标记为非关键的。
 
 ===== 专用因特网扩展 PrivatelnternetExtensions id-pkix
 
-====== 综述
+[level=6]
+===== 综述
 
 本项定义了两个应用于因特网公钥基础结构（PKI)的新扩展，用于指导应用以识别一个支持CA 的在线验证服务。
 
@@ -1078,11 +1146,13 @@ id-pe OBJECT IDENTIFIER   ::=  {  id-pkix  1  }
 
 每个项是一个IA5String值的序列，每个值分别代表一个URI。URI直接确定信息的位置和格式以及获得信息的方式。
 
-====== 机构信息访问 authorityInfoAccess
+[level=6]
+===== 机构信息访问 authorityInfoAccess
 
 本项描述了包含该扩展的证书的颁发者如何访问CA的信息以及服务。包括在线验证服务和CA 策略数据。该扩展可包括在用户证书和CA证书中，且必须为非关键的。
 
-======= 定义
+[level=7]
+===== 定义
 
 [source]
 ----
@@ -1100,7 +1170,8 @@ id-ad-calssuers OBJECT IDENTIFIER ::= { id-ad 2 }
 id-ad-ocsp OBJECT IDENTIFIER      ::= { id-ad 1 }
 ----
 
-======= 说明
+[level=7]
+===== 说明
 
 序列AuthorityInforAccessSyntax中的每个入口描述有关颁发含有该扩展的证书的CA附加信息格式和位置。信息的类型和格式由accessMethod字段说明；信息的位置由accessLocation字段说明。 检索机制可以由accessMethod表明或由accessLocation说明。
 
@@ -1109,11 +1180,13 @@ id-ad-ocsp OBJECT IDENTIFIER      ::= { id-ad 1 }
 当id-ad-calssuers以accessInfoType出现时，accessLocation字段描述了获得访问协议的形式。 AccessLocation字段定义为GeneralName，它可有几种形式：当信息可以通过http、ftp或ldap获得时， accessLocation必须是一个uniformResourceIdentifier类型。当信息可以通过目录访问协议获得时， accessLocation必须是一个directoryName类型。当信息可以通过电子邮件获得时，accessLocation必 须是一个rfc822Name类型。
 
 
-====== 主体信息访问 SubjectInformationAccess
+[level=6]
+===== 主体信息访问 SubjectInformationAccess
 
 本项描述了证书主体如何访问信息和服务。如果主体是CA，则包括证书验证服务和CA策略数 据，如果主体是用户，则描述了提供的服务的类型以及如何访问它们，在这种情况下，扩展域/项中的内容在所支持的服务协议的说明中定义。这个扩展项必须定义为非关键的。
 
-======= 定义
+[level=7]
+===== 定义
 
 
 [source]
@@ -1314,7 +1387,8 @@ FreshestCRL ::= CRLDistributionPoints
 [[crl-entry]]
 ===== 证书撤销列表条目 CRL Entry
 
-====== 原因代码 Reason Code
+[level=6]
+===== 原因代码 Reason Code
 
 原因代码为非关键扩展，表明证书撤销的原因。
 
@@ -1340,7 +1414,8 @@ CRLReason ::= ENUMERATED {
   aACompromise          (10) }
 ----
 
-====== 撤销时间 Invalidity Date
+[level=6]
+===== 撤销时间 Invalidity Date
 
 撤销时间是个非关键扩展，表明知道或怀疑私钥泄露或证书失效的时间。
 
@@ -1352,7 +1427,8 @@ id-ce-invalidityDate OBJECT IDENTIFIER ::= { id-ce 24 }
 InvalidityDate ::= GeneralizedTime
 ----
 
-====== 证书颁发者 Certificate Issuer
+[level=6]
+===== 证书颁发者 Certificate Issuer
 
 如果存在，证书颁发者扩展包含一个或多个和CRL条目对应的，从证书的颁发者域和/或颁发者替换名称域得到的名字。
 
@@ -2061,7 +2137,7 @@ CertificateIssuer ::= GeneralNames
 |RelativeDistinguished |||
 |AttributeTypeAndV |||
 |AttributeType  ||OID |
-|AttributeValue |
+|AttributeValue |||
 |FreshestCRL  |FALSE ||  使用增量黑名单方式才有此扩展
 |DistributionPoint |||
 |distributionPoint |||
@@ -2084,8 +2160,6 @@ CertificateIssuer ::= GeneralNames
 
 [[table-c5]]
 .证书撤销列表内容表
-|===
-
 [cols="3a,1a,2a,3a"]
 |===
 |域
@@ -2133,8 +2207,8 @@ CertificateIssuer ::= GeneralNames
 |UtcTime  ||YYMMDDHHMMSSZ  |用于2049之前的年份(含2049)
 |generalTime  ||YYYYMMDDHHMMSSZ |用于2049之后的年份
 
-|crlEntryExtensions
-|Extensions
+|crlEntryExtensions |||
+|Extensions |||
 |reasonCode  |FALSE  ||如果需要提供废除原因，请使用该扩展
 |CRLReason  ||| 主要使用的原因包括:keyCompromise 密钥泄露，CACompromise CA泄露， affiliationChanged, superseded 或 cessationOfOperation。如果废除原因未知，则此扩展项不要增加。 removeFromCRL只能用于增量CRL 中，关于证书冻结certificateHold建议不要使用
 

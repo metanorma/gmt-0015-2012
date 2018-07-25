@@ -38,7 +38,7 @@ Drafting Committee: Shanghai Koal Software Co., Ltd., Beijing Certificate Author
 
 Drafters: Ping Liu, Wuzheng Tan, Shusheng Li, Zengshou Liu, Qiang Xu, Cheng Liu, Lili Zhao, Yuanzheng Li, Nina Wang, Yue Chen, Fanyu Kong, Feng Yuan, Zhiwei Li.
 
-The algorithms involved in this Standard shall be used in accordance with the requirements of the state cryptography administration department.
+The algorithms involved in this Standard shall be used in accordance with the requirements of the State Cryptography Administration.
 
 
 
@@ -54,12 +54,12 @@ This standard is applicable to the research and development of a digital certifi
 [bibliography]
 == Normative references
 
-* [[[GBT162648,GB/T 16264.8]]]   _Information Technology	Open System Interconnection Directory Section 8; Public Key and Attribute Certificate Frameworks_
-* [[[GMT0006,GM/T 0006]]]  _Cryptographic Application Identifier Criterion Specification_
-* [[[GMT0009,GM/T 0009]]]  _SM2 Cryptography Algorithm Application Specification _
-* [[[GMT0010,GM/T 0010]]]  _SM2 Cryptography Message Syntax Specification _
-* [[[P<<GBT162648>>,PKCS #7]]]  _Cryptographic Message Syntax Standard_
-* [[[RFC5280,RFC 5280]]] _Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile_
+* [[[GBT162648,GB/T 16264.8]]], _Information Technology -- Open System Interconnection Directory Section 8: Public Key and Attribute Certificate Frameworks_
+* [[[GMT0006,GM/T 0006]]], _Cryptographic Application Identifier Criterion Specification_
+* [[[GMT0009,GM/T 0009]]], _SM2 Cryptography Algorithm Application Specification_
+* [[[GMT0010,GM/T 0010]]], _SM2 Cryptography Message Syntax Specification_
+* [[[P<<GBT162648>>,PKCS #7]]], _Cryptographic Message Syntax Standard_
+* [[[RFC5280,RFC 5280]]], _Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile_
 
 
 [[terms]]
@@ -94,9 +94,9 @@ OID:: Object Identifier
 PKI:: Public Key Infrastructure
 
 
-== 数字证书与CRL
+== Digital Certificate and CRL
 
-=== 概述
+=== Overview
 
 Digital Certificate has the following characteristics:
 
@@ -111,7 +111,7 @@ Certificate authorities generate user certificates by signing information sets. 
 
 [stem]
 ----
-CA<<A>> = CA{V，SN，AI，CA，UCA，A，UA，Ap，TA}
+CA<<A>> = CA{V, SN, AI, CA, UCA, A, UA, Ap, TA}
 ----
 
 Where V indicates certificate version; SN indicates certificate serial number; AI indicates the algorithm identifier used to sign the certificate; UCA indicates CA's optional unique identifier; UA indicates User A's optional unique identifier; Ap indicates User A's public key; TA indicates certificate validity consisting of two dates, the time period between which is the validity of the certificate. Certificate validity is a time interval, during which CA must ensure to maintain the certificate information status, that is to release revocation information data. Since TA is assumed to change within a period cycle of no less than 24 hours, Coordinated Universal Time is required as the system reference time. The signature on the certificate can be used to verify the validity of the certificate by any user who knows the CA public key CAp.
@@ -122,11 +122,11 @@ CRL is a list file of revoked certificates. This list can be applied on an appli
 
 === Digital Certificate Format
 
-=== General
+==== General
 
 This Standard uses distinguished encoding rules (DER) of GB/T 16262 series of standards to encode the information in the following certificate, forming a specific certificate data structure. ASN.1 DER encoding is an encoding system of each element's tag, length and value.
 
-=== Data Structure of Basic Certificate Domain
+==== Data Structure of Basic Certificate Domain
 
 The basic data structure of the digital certificate is as follows:
 
@@ -204,7 +204,7 @@ Algorithm identifier is used to identify a cryptographic algorithm, in which OBJ
 +
 If the signature algorithm is SM2, please see <<GMT0009>> for SM2 cryptographic algorithm signature data format.
 
-=== TBSCertificate and its data structure
+==== TBSCertificate and its data structure
 
 TBSCertificate contains the first ten information items of a certificate structure, including subject name, issuer name, subject's public key, validity, version number and serial number; some TBSCertificates may also contain optional unique identifiers and extensions. The syntax and semantics of the above items are defined in the following paragraphs of this section.
 
@@ -252,12 +252,14 @@ Name describes the names of the hierarchical structures composed of certain attr
 
 This item is a time period, during which CA guarantees to maintain the information about the status of a certificate. This item is represented as a SEQUENCE type data with two time values: a certificate validity starting time (notBefore) and a certificate validity ending time (notAfter). Both NotBefore and NotAfter can be encoded as either the UTCTime type or the GeneralizedTime type.
 
-====== Encoding Type Requirements
+[level=6]
+===== Encoding Type Requirements
 
 A CA complying with this Standard must encode time as the UTCTime type before 2049 (including 2049) and as the GeneralizedTime type after 2050.
 
 [[validity-utctime]]
-====== UTCTime
+[level=6]
+===== UTCTime
 
 This item is a standard ASN. 1 type set up for international applications. In this item, only local time is not enough. UTCTime determines years using two low order digits and is accurate to 1min or 1s. UTCTime contains Z (for Zulu, or Greenwich Mean Time) or time difference.
 
@@ -266,7 +268,8 @@ In this item, the UTCTime value must be expressed in Greenwich Mean Time (Zulu),
 When YY is greater than or equal to 50 years, the year shall be interpreted as 19YY; when YY is less than 50 years, the year shall be interpreted as 20YY.
 
 [[validity-generalizedtime]]
-====== GeneralizedTime
+[level=6]
+===== GeneralizedTime
 
 This item is a standard ASN. 1 type, representing the variable precision of time. A GeneralizedTime field is capable of containing a time difference between a local time and a Greenwich Mean Time.
 
@@ -324,7 +327,8 @@ The application complying with this Standard must be capable of recognizing key 
 
 ===== Standard Extension
 
-====== General
+[level=6]
+===== General
 
 This section defines the standard certificate extension of a digital certificate. Each extension is related to an OID designated in <<GBT162648>>. Those OIDs are all id-ce members, with the following definition:
 
@@ -333,7 +337,8 @@ This section defines the standard certificate extension of a digital certificate
 id-ce   OBJECT IDENTIFIER   ::=   {  joint-iso-ccitt(2) ds(5) 29 }
 ----
 
-====== authorityKeyIdentifier
+[level=6]
+===== authorityKeyIdentifier
 
 An authority key identifier extension provides a way to identify the public key corresponding to the certificate signature private key. This extension is used when issuer has multiple keys coexisting or multiple signing keys due to changes occurring to issuer. The identification can be based on either the subject key identifier in the issuer's certificate or the issuer's name and serial number.
 
@@ -342,7 +347,8 @@ All corresponding certificates generated by a CA should include keyIdentifier of
 This item can be used as either a certificate extension or a CRL extension. This identifier is used to verify the public key signed on a certificate or a CRL. It can identity different keys used by the same CA (for example, when key updates occur).
 
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -361,7 +367,8 @@ authorityCertSerialNumber ABSENT})
 KeyIdentifier ::= OCTET STRING
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 A KeyIdentifier value should be exported from the public key used to verify a certificate signature or from the method that generates the unique value. KeyIdentifier of a public key can be generated using the following two general methods:
 
@@ -379,11 +386,13 @@ keyIdentifier and authorityCertSerialNumber are suggested to be required, but th
 
 
 
-====== subjectKeyIdentifier
+[level=6]
+===== subjectKeyIdentifier
 
 This item provides a method to identify a certificate containing a particular public key. This extension identifies an authenticated public key. It can distinguish different keys used by the same subject (for example, when key update occurs).
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -391,7 +400,8 @@ id-ce-subjectKeyIdentifier OBJECT IDENTIFIER  ::= { id-ce 14 }
 SubjectKeyIdentifier  ::= KeyIdentifier
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 
 对于使用密钥标识符的主体的各个密钥标识符而言，每一个密钥标识符均应是唯一的。此扩展项总是非关键的。
@@ -399,11 +409,13 @@ SubjectKeyIdentifier  ::= KeyIdentifier
 所有的CA 证书必须包括本扩展；而且CA 签发证书时必须把 CA  证书中本扩展的值赋给终端实体证书 AuthorityKeyIdentifier 扩展中的 KeyIdentifier项。CA 证书的主体密钥标识符应从公钥中或者生成唯一值的方法中导出。终端实体证书的主体密钥标识符应从公钥中导出，有两种通用的方法从公钥中生成密钥标识符 (See <<subject-public-key-info>>）。
 
 
-====== KeyUsage
+[level=6]
+===== KeyUsage
 
 This item specifies the usage of an authenticated public key.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -420,7 +432,8 @@ KeyUsage ::= BIT STRING {
   decipherOnly      (8) }
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 The usages of KeyUsage are as follows:
 
@@ -460,11 +473,13 @@ In application, this extension is used to distinguish certificate types. When on
 
 
 
-====== extKeyUsage
+[level=6]
+===== extKeyUsage
 
 This item indicates that authenticated public keys can have one or more usages. They can function as a supplement or substitute for the basic usage of a key usage extension.
 
-======= Definition
+[level=7]
+===== Definition
 
 // TODO: original document missing "="
 // id-ce-extKeyUsage OBJECT IDENTIFIER ：： {id-ce 37}
@@ -478,7 +493,8 @@ KeyPurposeId      ::= OBJECT IDENTIFIER
 ----
 
 
-======= Specification
+[level=7]
+===== Specification
 
 
 The usage of a key can be defined by any organization with the need of the key usage. The object identifier used to identify a key usage should be distributed according to GB/T 17969.1—2000.
@@ -544,11 +560,13 @@ id-kp-OCSPSigning OBJECT IDENTIFIER ::= { id-kp 9 }
 * OCSP response signature
 * Key usage can be set to digitalSignature, nonRepudiation
 
-====== privateKeyUsagePeriod
+[level=6]
+===== privateKeyUsagePeriod
 
 This item indicates the usage validity period of the private key corresponding to the authenticated public key. It can only be used for a digital signature key.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -558,7 +576,8 @@ PrivateKeyUsagePeriod ::= SEQUENCE {
   notAfter      [1] GeneralizedTime OPTIONAL}
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 The notBefore field indicates the earliest date and time when a private key is applied to a signature. Without the notBefore field, the starting time of a private key validity period is not available. The notAfter field indicates the latest date and time when a private key can be applied to a signature. Without the notAfter field, the ending time of a private key validity period is not available.
 
@@ -570,7 +589,8 @@ NOTE: The validity of a private key can be different from the validity of the au
 NOTE: The verifier of a digital signature wants to check if this key is still not revoked until the moment of authentication. For example, due to a compromised key, the certificate should still be valid for the public key when being authenticated. After the public key expires, the verifier of the signature cannot rely on the protocol ruled by the CRL.
 
 
-====== certificatePolicies
+[level=6]
+===== certificatePolicies
 
 This item lists the certificate policies approved by an issuer CA. These policies apply to certificates and the optional qualifier information regarding those certificate policies.
 
@@ -580,7 +600,8 @@ In user certificates, these policy information entries describe the certificate 
 
 In order to improve interoperability, this Standard suggests a policy information entry only contains one OID. If one OID is not enough, it is suggested to use the qualifiers designated in this item.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -626,7 +647,8 @@ DisplayText ::= CHOICE {
   utf8String      UTF8String  (SIZE (1..200)) }
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 
 This item defines two policy qualifiers for the use of certificate policy makers and certificate issuers. The qualifier types are CPS Pointer and User Notice.
@@ -638,12 +660,14 @@ User notice has two optional fields: the noticeRef field and the explicitText fi
 
 
 
-====== policyMappings
+[level=6]
+===== policyMappings
 
 This item only applies to a CA certificate. It lists one or more OID pairs. Each pair includes an issuerDomainPolicy and a subjectDomainPolicy. This pairing form indicates the issuer CA thinks its issuerDomainPolicy is equivalent to the subjectDomainPolicy of the subject CA. The user of the issuer CA can accept an issuerDomainPolicy for a certain application. Policy mapping tells the user of the issuer CA which policies related to the CA can be equivalent to the policies they accept.
 
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -654,7 +678,8 @@ PolicyMappingsSyntax ::= SEQUENCE SIZE(1..MAX) OF SEQUENCE{
   subjectDomainPolicy    CertPolicyId}
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 Policy cannot be mapped to or come from the specific value anyPolicy.
 
@@ -667,7 +692,8 @@ NOTE: Policy mapping indicates making related decision can consume significant m
 NOTE: Projected policy mapping can only be used in limited environments with very simple policy declarations.
 
 
-====== subjectAltName
+[level=6]
+===== subjectAltName
 
 
 This item contains one or more alternative names (can use any one of the multiple name forms) for the use of an entity. The CA binds this entry to the authenticated public key.
@@ -677,7 +703,8 @@ The subject alternative name extension allows adding the attached identity to th
 
 
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -705,7 +732,8 @@ EDIPartyName::= SEQUENCE{
   partyName        [1]  DirectoryString  }
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 The alternative values in GeneralName type are the names of the following forms:
 
@@ -744,11 +772,13 @@ NOTE: For further explanation, please refer to RFC2459 4.2.1.7.
 
 
 
-====== issuerAltName
+[level=6]
+===== issuerAltName
 
 This item contains one or multiple alternative names (any one of the multiple name forms) for the use of the certificate or the CRL issuer.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -756,17 +786,20 @@ id-ce-issuerAltName OBJECT IDENTIFIER   ::= { id-ce 18 }
 IssuerAltName   ::= GeneralName
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This item can be either critical or non-critical, depending on the choice of the certificate issuer or the CRL issuer. The practical application that supports this extension is not required to be able to process all name forms. If this extension is marked as critical, then it should at least be able to identify and process one of the existing name forms; otherwise, this certificate should be regarded as invalid. Except for the previous limits, the certificate use system is allowed to ignore any names with unidentifiable or unsupported name forms. If the certificate issuer or the CRL issuer item contains a directory name clearly identifying the issuing authority, this item is recommended to be marked as non-critical.
 
 If this extension exists and is marked as critical, the issuer item of the certificate or CRL can contain null names (e.g. correspond to a "`0`" sequence of the distinguished name). In this situation, the issuer can only be identified using names or some names in this extension. The issuer alternative names must be encoded according to the instruction of <<tbs-issuer>>.
 
-====== subjectDirectoryAttributes
+[level=6]
+===== subjectDirectoryAttributes
 
 This item is any directory attribute value of the certificate subject conveying its expectations.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -775,15 +808,18 @@ SubjectDirectoryAttributes  ::= SEQUENCE SIZE (1..MAX) OF Attribute
 AttributesSyntax            ::= SEQUENCE SIZE (1..MAX) OF Attribute
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This extension is always non-critical.
 
-====== basicConstraints
+[level=6]
+===== basicConstraints
 
 This item is used to identify whether or not a certificate subject is a CA and how long the possibly existing certification path through this CA is.
 
-======= Definition
+[level=7]
+===== Definition
 
 //TODO: the document had this before, which is wrong
 //CABOOLEAN DEFAULT FALSE,
@@ -797,7 +833,8 @@ BasicConstraintsSyntax  ::= SEQUENCE{
   pathLenConstraint   INTEGER (0..MAX) OPTIONAL}
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 
 The CA field identifies whether or not this public key certificate can be used to verify a certificate signature.
@@ -818,11 +855,13 @@ NOTE: In order to restrict a certificate to one end-entity only, that is, not a 
 
 
 
-====== nameConstraints
+[level=6]
+===== nameConstraints
 
 This item is only used in one CA certificate. It designates a namespace, in which a certificate path is set and can be found in the subject name of the subsequent certificate.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -841,7 +880,8 @@ GeneralSubtree  ::= SEQUENCE {
 BaseDistance ::= INTEGER (0..MAX)
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 
 If the permittedSubtrees field and the excludedSubtrees field exist, each of them specifies one or multiple named subtrees and is defined by the name of the root of this subtree or the name of any node in the subtree. A subtree range is an area defined by upper and/or lower bounds. If permittedSubtrees exists, among all the certificates issued by the subject CA and the subsequent CA in certification path, only the certificates whose subject names are the same as the subject name specified in the permittedSubtrees field in the subtree can be accepted. If excludedSubtrees exists, among all the certificates issued by the subject CA or the subsequent CA in the certificate path, no certificate whose name is the same as the subject name specified in excludedSubtrees can be accepted. If PermittedSutrees and excludedSubtrees both exist and the namespace overlaps, the exclusion statement is preferred.
@@ -862,11 +902,13 @@ In this Standard, no name formats shall use the minimum or maximum fields; the m
 
 
 
-====== policyConstraints
+[level=6]
+===== policyConstraints
 
 This item is used in the certificate issued by a CA. It restricts the path validation in two ways. It can be used to prohibit policy mapping or require each certificate in the path to contain an approved policy identifier.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -879,7 +921,8 @@ PolicyConstraints ::= SEQUENCE{
 SkipCerts ::= INTEGER (0..MAX)
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 If the requireExplicitPolicy field exists, and the certificate path contains a certificate issued by a designated CA, all certificates in this path are necessary to contain appropriate policy identifiers in their certificate extension items. An appropriate policy identifier is the identifier defined by the user in the certificate policy or the identifier of the policy equivalent to the declaration through policy mapping. The designated CA is an authority that contains this extension information (if the value of requireExplicitPolicy is "`0`") or the subsequent authority CA in the certification path (indicated by a non "`0`" value).
 
@@ -891,11 +934,13 @@ This extension can be either critical or non-critical, depending on the choice o
 
 
 [[crl-dist-points]]
-====== CRLDistributionPoints
+[level=6]
+===== CRLDistributionPoints
 
 A CRL distribution points extension is used to identify how to obtain the CRL information. This extension is only used as a certificate extension. It can be used in an authority certificate, an end-entity public key certificate and an attribute certificate. This item designates the CRL distribution points or the certificate users' access points to find out whether or not the certificate has been revoked. The certificate user can obtain an CRL from the available distribution points or can obtain the current complete CRL from the authority directory item.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -923,7 +968,8 @@ ReasonFlags ::= BITSTRING {
   certificateHold         (6) }
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 
 
@@ -955,11 +1001,13 @@ NOTE: Please refer to RFC2459 Section 5 for the application of the certificate r
 
 
 
-====== inhibitAnyPolicy
+[level=6]
+===== inhibitAnyPolicy
 
 This item designates a constraint which indicates that no policy is an explicit match for the certificate policies of all certificates in the certification path starting from the designated CA. The designated CA is either the subject CA of the certificate containing this extension (if the inhitAnyPolicy value is 0) or the subsequent authority CA in the certification path (designated by a non-0 value).
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -968,15 +1016,18 @@ InhibitAnyPolicy    ::= SkipCerts
 SkipCerts           ::= INTEGER(0..MAX)
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This extension can be either critical or non-critical, depending on the choice of the certificate issuer. It is suggested to be marked as critical; otherwise the certificate user may not be able to correctly interpret the rules set by the authority CA.
 
-====== 最新证书撤销列表freshestCRL
+[level=6]
+===== 最新证书撤销列表freshestCRL
 
 The freshest CRL extension is usually used as a certificate extension or used in the certificate issued to the authority or the user. This item identifies the CRL; the certificate user should contain the freshest revocation information for the CRL (e.g. the freshest CRL).
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -984,15 +1035,18 @@ id-ce-CRL freshestCRL OBJECT IDENTIFIER ::= { id-ce 46 }
 freshestCRL   ::= {CRLDistPointsSyntax}
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This extension can be either critical or non-critical, depending on the choice of the certificate issuer. If the freshest CRL extension is critical, then the certificate use system does not use the freshest CRL certificate which is not revoked and checked in the first place. If the extension is marked as non-critical, the certificate use system can use the local method to decide if there is the need to check the freshest CRL.
 
-====== IdentifyCode
+[level=6]
+===== IdentifyCode
 
 A personal identity code extension is used to represent a personal identity number.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -1005,7 +1059,8 @@ IdentifyCode ::= CHOICE {
 }
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 [source]
 ----
@@ -1016,11 +1071,13 @@ militaryOfficerCardNumber     --军官证号码
 
 This extension is marked as non-critical.
 
-====== InsuranceNumber
+[level=6]
+===== InsuranceNumber
 
 A personal social insurance number extension is used to represent a personal social insurance number.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -1028,15 +1085,18 @@ ID-InsuranceNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.2 }
 InsuranceNumber     ::= PrintableString
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This extension is marked as non-critical.
 
-====== ICRegistrationNumber
+[level=6]
+===== ICRegistrationNumber
 
 An enterprise registration number extension is used to represent an enterprise registration number.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -1044,15 +1104,18 @@ ID-ICRegistrationNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.3 }
 ICRegistrationNumber ::= PrintableString
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This extension is marked as non-critical.
 
-====== OrganizationCode
+[level=6]
+===== OrganizationCode
 
 An organization code extension is used to represent an organization code.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -1060,15 +1123,18 @@ ID-OrganizationCode OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.4 }
 OrganizationCode ::= PrintableString
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This extension is marked as non-critical.
 
-====== TaxationNumber
+[level=6]
+===== TaxationNumber
 
 An enterprise taxation number extension is used to represent an enterprise taxation number.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -1076,13 +1142,15 @@ ID-TaxationNumber OBJECT IDENTIFIER ::= { 1.2.156.10260.4.1.5 }
 TaxationNumber    ::= PrintableString
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 This extension is marked as non-critical.
 
 ===== PrivatelnternetExtensions id-pkix
 
-====== General
+[level=6]
+===== General
 
 This item defines two new extensions applied in the Internet public key infrastructure (PKI) for the use of application guidance in order to identify an online verification service that supports the CA.
 
@@ -1096,11 +1164,13 @@ id-pe OBJECT IDENTIFIER   ::=  {  id-pkix  1  }
 
 Each item is a sequence of IA5String values; each value represents a URL respectively. A URL directly confirms the location and format of the information as well as the way to obtain the information.
 
-====== authorityInfoAccess
+[level=6]
+===== authorityInfoAccess
 
 This item describes how the certificate issuer that contains this extension accesses the information and service of the CA. It includes the online verification service and the CA policy data. This extension can be included in the user certificate and the CA certificate and must be marked as non-critical.
 
-======= Definition
+[level=7]
+===== Definition
 
 [source]
 ----
@@ -1118,7 +1188,8 @@ id-ad-calssuers OBJECT IDENTIFIER ::= { id-ad 2 }
 id-ad-ocsp OBJECT IDENTIFIER      ::= { id-ad 1 }
 ----
 
-======= Specification
+[level=7]
+===== Specification
 
 Each portal of the sequence AuthorityInforAccessSyntax describes the format and location of the additional information of the CA issuing the certificate containing this extension. The type and format of the information is specified in the accessMethod field. The location of the information is specified in the accessLocation field. The retrieval mechanism can be indicated by accessMethod or explained by accessLocation.
 
@@ -1128,11 +1199,13 @@ When id-ad-calssuers appears as accessInfoType, the accessLocation field describ
 
 
 
-====== SubjectInformationAccess
+[level=6]
+===== SubjectInformationAccess
 
 This item describes how the certificate subject accesses information and a service. If the subject is a CA, it includes the certification verification service and the CA policy data. If the subject is a user, it describes the type of service provided and how to access them; in this situation, the content in the extension field/item is defined in the explanation of the supported service protocol. This extension must be defined as non-critical.
 
-======= Definition
+[level=7]
+===== Definition
 
 
 [source]
@@ -1339,7 +1412,8 @@ FreshestCRL ::= CRLDistributionPoints
 [[crl-entry]]
 ===== CRL Entry
 
-====== Reason Code
+[level=6]
+===== Reason Code
 
 A reason code is a non-critical extension indicating the reason for certificate revocation.
 
@@ -1366,7 +1440,8 @@ CRLReason ::= ENUMERATED {
   aACompromise          (10) }
 ----
 
-====== Invalidity Date
+[level=6]
+===== Invalidity Date
 
 invalidity date is a non-critical extension indicating the time of knowing or suspecting a key being compromised or a certificate becoming invalid.
 
@@ -1379,7 +1454,8 @@ id-ce-invalidityDate OBJECT IDENTIFIER ::= { id-ce 24 }
 InvalidityDate ::= GeneralizedTime
 ----
 
-====== Certificate Issuer
+[level=6]
+===== Certificate Issuer
 
 If present, the certificate issuer extension contains one or more names which correspond to the CRL entries and are obtained from a certificate issuer domain and/or issuer alternative name domain.
 
@@ -2091,7 +2167,7 @@ An end-entity signature certificate and an encryption certificate should always 
 |RelativeDistinguished |||
 |AttributeTypeAndV |||
 |AttributeType  ||OID |
-|AttributeValue |
+|AttributeValue |||
 |FreshestCRL  |FALSE ||  This extension exists only when incremental blacklisting is in use.
 |DistributionPoint |||
 |distributionPoint |||
@@ -2114,8 +2190,6 @@ An end-entity signature certificate and an encryption certificate should always 
 
 [[table-c5]]
 .Certificate Revocation List Content Table
-|===
-
 [cols="3a,1a,2a,3a"]
 |===
 |Domain
@@ -2163,8 +2237,8 @@ An end-entity signature certificate and an encryption certificate should always 
 |UtcTime  ||YYMMDDHHMMSSZ  |Applied to the years before 2049 (including 2049)
 |generalTime  ||YYYYMMDDHHMMSSZ |Applied to the years after 2049
 
-|crlEntryExtensions
-|Extensions
+|crlEntryExtensions |||
+|Extensions |||
 |reasonCode  |FALSE  ||Use this extension when the reason of abolishement needs to be provided.
 |CRLReason  ||| The main reason of this domain being used: key compromise, CA compromise, affiliation changed, suspended or cessation of operation. If the reason of abolishment is unknown, then this extension shouldn't be incremented. removeFromCRL can only applied to a Delta CRL. certificateHold is not suggested to be used.
 
