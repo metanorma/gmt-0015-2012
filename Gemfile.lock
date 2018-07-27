@@ -26,11 +26,11 @@ GEM
       gbbib
       isodoc (>= 0.8.0)
       twitter_cldr
-    asciidoctor-iso (0.9.7)
+    asciidoctor-iso (0.9.9)
       asciidoctor (~> 1.5.7)
       iev (~> 0.1.0)
       isodoc (>= 0.8)
-      relaton (~> 0.1.1)
+      relaton (~> 0.1.3)
       ruby-jing
     asciidoctor-m3d (0.3.2)
       asciidoctor (~> 1.5.7)
