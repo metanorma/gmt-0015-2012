@@ -87,11 +87,11 @@ CA 对撤销的证书而签发的一个列表文件。
 
 下列缩略语适用于本文件。
 
-CA::  证书认证机构
-CRL::  证书撤销列表
-DIT::  目录信息树
-OID::  对象标识符
-PKI::  公钥基础设施
+CA:: 证书认证机构
+CRL:: 证书撤销列表
+DIT:: 目录信息树
+OID:: 对象标识符
+PKI:: 公钥基础设施
 
 
 == 数字证书与CRL
@@ -110,9 +110,9 @@ NOTE: 尽管在DIT中使用唯一性名称来明确定义CA，但这并不意味
 认证机构通过对信息集合的签名来生成用户证书，信息集合包括可辨别的用户名、公钥以及一个可 选的包含用户附加信息的唯一性标识符(unique identifier)。唯一性标识符内容的确切格式本章未做规 定，而留给认证机构(CA)去定义。唯一性标识符可以是诸如对象标识符、证书、日期或是说明有关可辨 别用户名的有效性的证书的其他形式。具体地说，如果一个用户证书的可辨别名为A，唯一性标识符为 UA，并且该证书是由名为CA，其唯一性标识符为UCA的认证机构生成的，则用户证书具有下列的 形式：
 
 [stem]
-----
+++++
 CA<<A>> = CA{V，SN，AI，CA，UCA，A，UA，Ap，TA}
-----
+++++
 
 这里V为证书版本;SN为证书序列号;AI为用来签署证书的算法标识符；UCA为CA的可选的唯一性标识符；UA为用户A的可选的唯一性标识符；Ap为用户A的公钥；TA表示证书的有效期，由两个日期组成，两者之间的时间段即是证书的有效期。证书有效期是一个时间区间，在这个时间区间里，CA必须保证维护该证书的状态信息，也就是发布有关撤销的信息数据。由于假定TA在不小于24 h的 周期内变化，要求系统以格林威治时间（Coordinated Universal Time) 为基准时间。证书上的签名可被 任何知道CA公钥CAp的用户用来验证证书的有效性。
 
@@ -1681,7 +1681,7 @@ CertificateIssuer ::= GeneralNames
 |subjectInfoAccess  |FALSE  | |对象信息存储包括一系列访问方法。 只有一种存储方法被定义为CA证书中
 |AccessDescription |||
 |accessMethod  ||id-ad-caRepository (1.3.6.1.5.5.7.48.5)
-|自签名证书至少要包括存储方法一个实例，这种存储方法包括URI名字形成LDAP访问目录服务器的指定位置。证书也可包括URI名字形成 指定HTTP访问WEB服务器。每一个URI应指向CA证书的位置
+|自签名证书至少要包括存储方法一个实例，这种存储方法包括URI名字形成LDAP访问目录服务器的指定位置。证书也可包括URI名字形成指定HTTP访问WEB服务器。每一个URI应指向CA证书的位置
 
 |accessLocation |||
 |GeneralName |||
@@ -1770,7 +1770,7 @@ CertificateIssuer ::= GeneralNames
 |NULL |RSA
 |ECPublicKeySpec  |SM2密码算法曲线的OID
 
-|subjectPublicKey  | |BIT STRING  |对RSA算法，模长至少应该是2048位， 对SM2箅法，公钥至少256位
+|subjectPublicKey  | |BIT STRING  |对RSA算法，模长至少应该是2048位，对SM2箅法，公钥至少256位
 
 4+|必须的扩展
 |authorityKeyIdentifier  |FALSE  ||签发者密钥标识符
@@ -1823,7 +1823,7 @@ CertificateIssuer ::= GeneralNames
 |subjectInfoAccess  |FALSE ||对象信息存储包括一系列访问方法，只有一种存储方法被定义为CA证书中
 |AccessDescription |||
 |accessMethod  || id-ad-caRepository (1.3.6.1.5.5.7.48.5)
-|自签名证书至少要包括存储方法一 个实例，这种存储方法包括URI名字 形成LDAP访问目录服务器的指定 位置。证书也可包括URI名字形成 指定HTTP访问WEB服务器。每一个URI应指向CA证书的位置
+|自签名证书至少要包括存储方法一 个实例，这种存储方法包括URI名字 形成LDAP访问目录服务器的指定 位置。证书也可包括URI名字形成指定HTTP访问WEB服务器。每一个URI应指向CA证书的位置
 
 |accessLocation |||
 |GeneralName |||
@@ -2089,7 +2089,7 @@ CertificateIssuer ::= GeneralNames
 |仅解密 decipherOnly  ||  0 |
 |certificatePolicies  |FALSE ||
 |PolicyInformation |||
-||policyIdentifier  ||  OID  |The inclusion of policy qualifiers is discouraged
+|policyIdentifier  ||  OID  |The inclusion of policy qualifiers is discouraged
 |CRLDistributionPoints||
 
 |DistributionPoint |||
@@ -2222,7 +2222,7 @@ CertificateIssuer ::= GeneralNames
 |Extensions |||
 |authorityKeyIdentifier  |FALSE ||  签发者密钥标识符
 |KeyIdentifier  ||OCTET字符串  |签发者公钥值的SHA-1哈希算法 摘要
-|issuerAltName  |FALSE ||任何名字类型都可以，但只有最通用 的名称才在这里加入
+|issuerAltName  |FALSE ||任何名字类型都可以，但只有最通用的名称才在这里加入
 |GeneralNames |||
 |GeneralName |||
 |rfc822Name  ||IA5String  |PKI管理机构的电子邮件地址
@@ -2242,7 +2242,7 @@ CertificateIssuer ::= GeneralNames
 |Attribute Value |||
 |uniformResourceIdentifier  ||IA5String  |采用 "`ldap://`" 或者 "`http://`" 形式
 |onlyContainsUserCerts  ||BOOLEAN  |如果设置为真，则本CRL只覆盖实体证书。（注意：如果本值为真，同时覆 盖了所有实体证书，则 distributionPoint 可以忽略）
-|onlyContainsCACerts    ||BOOLEAN  |如果设置为真，则本CRL只覆盖CA 证书。（注意：如果本值为真，同时覆 盖了所有 CA 证书，则 distributionPoint 可以忽略）
+|onlyContainsCACerts    ||BOOLEAN  |如果设置为真，则本CRL只覆盖CA证书。（注意：如果本值为真，同时覆 盖了所有 CA 证书，则 distributionPoint 可以忽略）
 |IndirectCRL  |FALSE  ||本标准不推荐使用间接CRL,如果本CRL包含了非本CRL发行者所颁发的证书,这一项必须设置为真
 |FreshestCRL  |FALSE  ||在启用增量方式时，包含此项
 |DistributionPoint |||
